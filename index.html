@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="sw"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EDUCATIONAL MATERIALS</title>
+<style>
+:root{--navy:#10243a;--blue:#1769aa;--bg:#f4f7fb;--line:#dce5ef}*{box-sizing:border-box}
+body{margin:0;font:16px/1.55 system-ui;background:var(--bg);color:#172536}
+header{background:linear-gradient(120deg,#10243a,#1769aa);color:white;padding:22px max(18px,calc((100% - 1080px)/2))}
+.brand{font-size:1.4rem;font-weight:850;letter-spacing:.04em}main{max-width:1080px;margin:auto;padding:24px 18px}
+.hero,.panel,.item{background:white;border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:16px}
+h1{color:var(--navy);margin:0}p{color:#617184}.controls{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px;margin-top:16px}
+input,select,textarea,button{font:inherit;padding:11px;border:1px solid var(--line);border-radius:10px;width:100%;background:white}
+button{background:var(--blue);color:white;border:0;font-weight:700;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.item{display:flex;flex-direction:column;gap:8px;margin:0}.pill{background:#e9f3fc;color:#145b91;border-radius:30px;padding:3px 9px;width:max-content;font-size:.8rem}
+.price{font-weight:800}.notice{background:#fff7e6;padding:12px;border-radius:10px;border:1px solid #f4d99e}
+form{display:grid;gap:10px;max-width:600px}label{font-weight:650}.empty{background:white;padding:20px;border-radius:12px}
+footer{text-align:center;padding:25px;color:#617184}@media(max-width:650px){.controls{grid-template-columns:1fr}}
+</style></head><body>
+<header><div class="brand">EDUCATIONAL MATERIALS</div><div>Maktaba ya vitabu na mitihani kwa wanafunzi wa Tanzania</div></header>
+<main><section class="hero"><h1>Karibu kwenye maktaba ya elimu</h1><p>Tafuta vitabu, mitihani ya nyuma na nyenzo za kujifunzia.</p>
+<div class="controls"><input id="q" placeholder="Tafuta jina, somo au mwaka"><select id="kind"><option value="">Aina zote</option><option>Kitabu</option><option>Mtihani</option></select><select id="level"><option value="">Darasa / kidato chote</option><option>Darasa la 7</option><option>Kidato cha 1</option><option>Kidato cha 2</option></select></div></section>
+<h2>Nyenzo zilizopo</h2><section id="catalog" class="grid"></section>
+<section class="panel" id="payment"><h2>Wasilisha malipo ya kitabu</h2><div class="notice"><b>Bei:</b> TSh 500<br><b>Tigo Pesa:</b> 0773614026<br>Baada ya kutuma pesa, jaza kumbukumbu ya muamala. Msimamizi atakagua kabla ya kukupa ruhusa.</div>
+<form id="payform"><label>Jina la kitabu / mtihani<input name="resource" required></label><label>Jina lako<input name="customer" required></label><label>Namba ya simu<input name="phone" required></label><label>Namba ya muamala<input name="reference" required></label><label>Maelezo (si lazima)<textarea name="notes"></textarea></label><button>Tuma ombi la uthibitisho</button></form><p id="msg"></p></section>
+<section class="panel"><h2>Maelezo ya toleo hili</h2><p>Hili ni toleo la mwanzo la majaribio. Orodha ni mifano tu. Fomu huhifadhi ombi kwenye browser ya kifaa hiki; haitumi taarifa kwa msimamizi na haifungui PDF za kulipia.</p><p>Kabla ya matumizi halisi tutahitaji kuunganisha database, login salama, dashboard ya admin na hifadhi salama ya PDF kupitia Supabase.</p></section></main>
+<footer>© EDUCATIONAL MATERIALS · Tanzania</footer>
+<script>
+const data=[
+{title:"Mfano: Hisabati - Kidato cha Kwanza",kind:"Kitabu",level:"Kidato cha 1",subject:"Hisabati",year:"2025",paid:false},
+{title:"Mfano: Mtihani wa Kiingereza - Darasa la Saba",kind:"Mtihani",level:"Darasa la 7",subject:"Kiingereza",year:"2024",paid:true},
+{title:"Mfano: Sayansi - Kidato cha Pili",kind:"Kitabu",level:"Kidato cha 2",subject:"Sayansi",year:"2025",paid:false}];
+const el=id=>document.getElementById(id);
+function render(){let q=el("q").value.toLowerCase(),k=el("kind").value,l=el("level").value;
+let rows=data.filter(x=>(!q||[x.title,x.subject,x.year].join(" ").toLowerCase().includes(q))&&(!k||x.kind===k)&&(!l||x.level===l));
+el("catalog").innerHTML=rows.length?rows.map(x=>`<article class="item"><span class="pill">${x.kind} · ${x.level}</span><h3>${x.title}</h3><p>${x.subject} · ${x.year}</p><div class="price">${x.paid?"TSh 500":"BURE"}</div><button onclick="choose('${x.title.replace(/'/g,"")}')">${x.paid?"Maelekezo ya malipo":"Chagua nyenzo"}</button></article>`).join(""):'<div class="empty">Hakuna nyenzo iliyopatikana.</div>'}
+function choose(t){el("payment").scrollIntoView({behavior:"smooth"});el("payform").elements.resource.value=t}
+["q","kind","level"].forEach(id=>el(id).addEventListener("input",render));
+el("payform").addEventListener("submit",e=>{e.preventDefault();let a=JSON.parse(localStorage.getItem("em_demo_requests")||"[]");a.push({...Object.fromEntries(new FormData(e.target)),status:"PENDING - DEMO ONLY"});localStorage.setItem("em_demo_requests",JSON.stringify(a));el("msg").textContent="Ombi limehifadhiwa kwenye kifaa hiki kwa majaribio tu; halijatumwa kwa msimamizi.";e.target.reset()});render();
+</script></body></html>
