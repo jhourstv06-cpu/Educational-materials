@@ -44,6 +44,23 @@ create table if not exists public.payment_submissions (
 create index if not exists resources_catalog_idx on public.resources (published, kind, level, subject);
 create index if not exists payment_user_resource_idx on public.payment_submissions (user_id, resource_id, status);
 
+-- Automatically create a student profile whenever someone signs up.
+create or replace function public.handle_new_user()
+returns trigger language plpgsql security definer
+set search_path = public
+as $
+begin
+  insert into public.profiles (id, full_name)
+  values (new.id, coalesce(new.raw_user_meta_data->>'full_name', ''))
+  on conflict (id) do nothing;
+  return new;
+end;
+$;
+drop trigger if exists on_auth_user_created on auth.users;
+create trigger on_auth_user_created
+after insert on auth.users
+for each row execute procedure public.handle_new_user();
+
 create or replace function public.is_admin()
 returns boolean language sql stable security definer
 set search_path = public
@@ -58,10 +75,7 @@ alter table public.payment_submissions enable row level security;
 drop policy if exists "profiles read self or admin" on public.profiles;
 create policy "profiles read self or admin" on public.profiles for select to authenticated
 using (id = auth.uid() or public.is_admin());
-drop policy if exists "profiles update self or admin" on public.profiles;
-create policy "profiles update self or admin" on public.profiles for update to authenticated
-using (id = auth.uid() or public.is_admin())
-with check (id = auth.uid() or public.is_admin());
+-- Do not allow users to edit their own role. Promote the first admin only in SQL Editor.
 
 drop policy if exists "published resources visible" on public.resources;
 create policy "published resources visible" on public.resources for select
@@ -103,7 +117,8 @@ using (
     where r.file_path = storage.objects.name
       and r.published = true
       and (
-        r.is_paid = false
+        public.is_admin()
+        or r.is_paid = false
         or exists (
           select 1 from public.payment_submissions p
           where p.resource_id = r.id and p.user_id = auth.uid() and p.status = 'approved'
@@ -111,6 +126,14 @@ using (
       )
   )
 );
+
+-- Grant only the API permissions required by the website.
+grant usage on schema public to anon, authenticated;
+grant select on public.resources to anon, authenticated;
+grant select on public.profiles to authenticated;
+grant select, insert, update on public.payment_submissions to authenticated;
+grant insert, update, delete on public.resources to authenticated;
+grant usage, select on all sequences in schema public to authenticated;
 
 -- IMPORTANT: after registering your own account, promote it to admin manually:
 -- update public.profiles set role = 'admin' where id = 'YOUR-AUTH-USER-UUID';
