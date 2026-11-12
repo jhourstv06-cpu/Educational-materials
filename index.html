@@ -55,6 +55,12 @@ $('signup').onclick=async()=>{clearMsg('authmsg');const {data,error}=await db.au
 $('logout').onclick=async()=>{await db.auth.signOut();currentUser=null;await updateAccount();await loadResources()};
 db.auth.onAuthStateChange((_event,session)=>{currentUser=session?.user||null;setTimeout(async()=>{await updateAccount();await loadResources()},0)});
 async function loadResources(){
+ if(!currentUser){
+  resources=[];
+  $('level').innerHTML='<option value="">Darasa / kidato chote</option>';
+  $('catalog').innerHTML='<div class="item"><h3>Ingia au jisajili kwanza</h3><p>Vitabu, mitihani na nyenzo za maktaba vitaonekana baada ya kuingia kwenye akaunti yako.</p><button onclick="document.getElementById(\'account\').scrollIntoView({behavior:\'smooth\'})">Ingia / Fungua akaunti</button></div>';
+  return;
+ }
  const {data,error}=await db.from('resources').select('*').eq('published',true).order('created_at',{ascending:false});
  if(error){$('catalog').innerHTML='<div class="item">Imeshindikana kupakia. Hakikisha umeendesha SQL ya Supabase. '+error.message+'</div>';return}
  resources=data||[];const levels=[...new Set(resources.map(x=>x.level).filter(Boolean))];$('level').innerHTML='<option value="">Darasa / kidato chote</option>'+levels.map(x=>'<option>'+esc(x)+'</option>').join('');
