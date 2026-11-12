@@ -78,7 +78,7 @@ using (id = auth.uid() or public.is_admin());
 -- Do not allow users to edit their own role. Promote the first admin only in SQL Editor.
 
 drop policy if exists "published resources visible" on public.resources;
-create policy "published resources visible" on public.resources for select
+create policy "published resources visible" on public.resources for select to authenticated
 using (published = true or public.is_admin());
 drop policy if exists "admins manage resources" on public.resources;
 create policy "admins manage resources" on public.resources for all to authenticated
@@ -129,7 +129,7 @@ using (
 
 -- Grant only the API permissions required by the website.
 grant usage on schema public to anon, authenticated;
-grant select on public.resources to anon, authenticated;
+revoke select on public.resources from anon;\ngrant select on public.resources to authenticated;
 grant select on public.profiles to authenticated;
 grant select, insert, update on public.payment_submissions to authenticated;
 grant insert, update, delete on public.resources to authenticated;
