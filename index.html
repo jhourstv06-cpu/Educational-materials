@@ -51,7 +51,7 @@ async function updateAccount(){
  $('admin').classList.toggle('hidden',!isAdmin);
 }
 $('login').onclick=async()=>{clearMsg('authmsg');const {error}=await db.auth.signInWithPassword({email:$('email').value,password:$('password').value});if(error)message('authmsg',error.message,true);else{await refreshSession();message('authmsg','Umeingia kikamilifu.')}};
-$('signup').onclick=async()=>{clearMsg('authmsg');const {data,error}=await db.auth.signUp({email:$('email').value,password:$('password').value});if(error)message('authmsg',error.message,true);else if(data.session){await refreshSession();message('authmsg','Akaunti imefunguliwa na umeingia.')}else message('authmsg','Akaunti imeundwa. Angalia barua pepe yako kuthibitisha usajili kabla ya kuingia.');};
+$('signup').onclick=async()=>{clearMsg('authmsg');const {data,error}=await db.auth.signUp({email:$('email').value,password:$('password').value,options:{emailRedirectTo:'https://jhourstv06-cpu.github.io/Educational-materials/'}});if(error)message('authmsg',error.message,true);else if(data.session){await refreshSession();message('authmsg','Akaunti imefunguliwa na umeingia.')}else message('authmsg','Akaunti imeundwa. Angalia barua pepe yako kuthibitisha usajili kabla ya kuingia.');};
 $('logout').onclick=async()=>{await db.auth.signOut();currentUser=null;await updateAccount();await loadResources()};
 db.auth.onAuthStateChange((_event,session)=>{currentUser=session?.user||null;setTimeout(async()=>{await updateAccount();await loadResources()},0)});
 async function loadResources(){
