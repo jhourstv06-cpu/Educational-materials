@@ -93,7 +93,6 @@ $('payform').onsubmit=async e=>{e.preventDefault();clearMsg('paymsg');if(!curren
 $('showupload').onclick=()=>{$('resourceform').classList.remove('hidden');$('adminlist').classList.add('hidden')};
 $('showpayments').onclick=loadPayments;
 $('resourceform').onsubmit=async e=>{e.preventDefault();clearMsg('adminmsg');if(!isAdmin){message('adminmsg','Huna ruhusa ya msimamizi.',true);return}const f=$('rfile').files[0];if(!f||f.type!=='application/pdf'){message('adminmsg','Chagua faili la PDF.',true);return}
- if(f.size>50*1024*1024){message('adminmsg','PDF hili lina ukubwa wa '+(f.size/1024/1024).toFixed(1)+' MB. Kwa sasa mfumo unaruhusu hadi 50 MB kwa faili moja. Punguza ukubwa wa PDF kisha ujaribu tena.',true);return}
  const id=crypto.randomUUID(),path=id+'/'+f.name.replace(/[^a-zA-Z0-9._-]/g,'_');let up=await db.storage.from('materials').upload(path,f,{contentType:'application/pdf',upsert:false});if(up.error){message('adminmsg','PDF haikupakiwa: '+up.error.message,true);return}
  const row={title:$('rtitle').value.trim(),kind:$('rkind').value,subject:$('rsubject').value.trim(),level:$('rlevel').value.trim(),year:$('ryear').value?Number($('ryear').value):null,description:$('rdesc').value.trim(),is_paid:$('rpaid').checked,price_tzs:500,file_path:path,published:$('rpublished').checked,created_by:currentUser.id};
  const {error}=await db.from('resources').insert(row);if(error){await db.storage.from('materials').remove([path]);message('adminmsg','Nyenzo haijahifadhiwa: '+error.message,true);return}
