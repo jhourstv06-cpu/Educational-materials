@@ -129,7 +129,8 @@ using (
 
 -- Grant only the API permissions required by the website.
 grant usage on schema public to anon, authenticated;
-revoke select on public.resources from anon;\ngrant select on public.resources to authenticated;
+revoke select on public.resources from anon;
+grant select on public.resources to authenticated;
 grant select on public.profiles to authenticated;
 grant select, insert, update on public.payment_submissions to authenticated;
 grant insert, update, delete on public.resources to authenticated;
