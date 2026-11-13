@@ -19,7 +19,7 @@ create table if not exists public.resources (
   level text,
   year integer,
   is_paid boolean not null default false,
-  price_tzs integer not null default 500 check (price_tzs >= 0),
+  price_tzs integer not null default 1000 check (price_tzs >= 0),
   file_path text,
   published boolean not null default false,
   created_by uuid references auth.users(id),
