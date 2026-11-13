@@ -28,11 +28,11 @@ small{color:#617184}@media(max-width:650px){.controls{grid-template-columns:1fr}
 
 <h2>Nyenzo zilizochapishwa</h2><section id="catalog" class="grid"><div class="item">Inapakia maktaba...</div></section>
 
-<section class="panel hidden" id="payment"><h2>Wasilisha malipo</h2><div class="notice"><b>Bei:</b> TSh 500 kwa nyenzo ya kulipia<br><b>Tigo Pesa:</b> 0773614026<br>Baada ya kutuma pesa, weka kumbukumbu ya muamala. Msimamizi atakagua kabla ya ruhusa ya kupakua.</div>
+<section class="panel hidden" id="payment"><h2>Wasilisha malipo</h2><div class="notice"><b>Bei:</b> TSh 1,000 kwa nyenzo ya kulipia<br><b>Tigo Pesa:</b> 0773614026<br>Baada ya kutuma pesa, weka kumbukumbu ya muamala. Msimamizi atakagua kabla ya ruhusa ya kupakua.</div>
 <form id="payform"><label>Nyenzo<input id="paytitle" readonly required placeholder="Chagua nyenzo ya kulipia"></label><input id="payid" type="hidden"><label>Jina la mtumaji<input id="payer" required></label><label>Namba ya simu<input id="payphone" required></label><label>Namba ya muamala<input id="reference" required></label><label>Maelezo (si lazima)<textarea id="notes"></textarea></label><button>Tuma ombi la uthibitisho</button></form><div id="paymsg" aria-live="polite"></div></section>
 
 <section class="panel hidden" id="admin"><h2>Dashibodi ya msimamizi</h2><div class="tabs"><button id="showupload">Ongeza kitabu/mtihani</button><button class="secondary" id="showpayments">Maombi ya malipo</button></div>
-<form id="resourceform"><label>Jina la nyenzo<input id="rtitle" required></label><div class="row"><label>Aina<select id="rkind"><option>Kitabu</option><option>Mtihani</option><option>Nyenzo nyingine</option></select></label><label>Somo<input id="rsubject"></label></div><div class="row"><label>Darasa/kidato<input id="rlevel" placeholder="Mfano: Kidato cha 2"></label><label>Mwaka<input id="ryear" type="number" min="1900" max="2100"></label></div><label>Maelezo<textarea id="rdesc"></textarea></label><label>PDF<input id="rfile" type="file" accept="application/pdf" required></label><label><input id="rpaid" type="checkbox" style="width:auto"> Nyenzo ya kulipia (TSh 500)</label><label><input id="rpublished" type="checkbox" checked style="width:auto"> Chapisha mara moja</label><button>Hifadhi nyenzo</button></form>
+<form id="resourceform"><label>Jina la nyenzo<input id="rtitle" required></label><div class="row"><label>Aina<select id="rkind"><option>Kitabu</option><option>Mtihani</option><option>Nyenzo nyingine</option></select></label><label>Somo<input id="rsubject"></label></div><div class="row"><label>Darasa/kidato<input id="rlevel" placeholder="Mfano: Kidato cha 2"></label><label>Mwaka<input id="ryear" type="number" min="1900" max="2100"></label></div><label>Maelezo<textarea id="rdesc"></textarea></label><label>PDF<input id="rfile" type="file" accept="application/pdf" required></label><label><input id="rpaid" type="checkbox" style="width:auto"> Nyenzo ya kulipia (TSh 1,000)</label><label><input id="rpublished" type="checkbox" checked style="width:auto"> Chapisha mara moja</label><button>Hifadhi nyenzo</button></form>
 <div id="adminlist" class="hidden"></div><div id="adminmsg" aria-live="polite"></div></section>
 
 <footer>© EDUCATIONAL MATERIALS · Tanzania</footer></div></main>
@@ -71,7 +71,7 @@ async function loadResources(){
 }
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function render(){const q=$('q').value.toLowerCase(),k=$('kind').value,l=$('level').value;const rows=resources.filter(x=>(!q||[x.title,x.subject,x.year,x.description].join(' ').toLowerCase().includes(q))&&(!k||x.kind===k)&&(!l||x.level===l));
- $('catalog').innerHTML=rows.length?rows.map(x=>'<article class="item"><span class="pill">'+esc(x.kind)+' · '+esc(x.level||'Kiwango hakijawekwa')+'</span><h3>'+esc(x.title)+'</h3><p>'+esc(x.subject||'Somo halijawekwa')+' · '+esc(x.year||'')+'</p><div class="price">'+(x.is_paid?'TSh '+Number(x.price_tzs||500).toLocaleString('en-US'):'BURE')+'</div><small>'+esc(x.description||'')+'</small><button data-download="'+x.id+'">'+(x.is_paid?'Lipa TSh 500 ili kupakua':'Fungua / Pakua PDF')+'</button>'+'</article>').join(''):'<div class="item">Bado hakuna nyenzo zilizochapishwa. Msimamizi ataongeza vitabu na mitihani.</div>';
+ $('catalog').innerHTML=rows.length?rows.map(x=>'<article class="item"><span class="pill">'+esc(x.kind)+' · '+esc(x.level||'Kiwango hakijawekwa')+'</span><h3>'+esc(x.title)+'</h3><p>'+esc(x.subject||'Somo halijawekwa')+' · '+esc(x.year||'')+'</p><div class="price">'+(x.is_paid?'TSh '+Number(x.price_tzs||1000).toLocaleString('en-US'):'BURE')+'</div><small>'+esc(x.description||'')+'</small><button data-download="'+x.id+'">'+(x.is_paid?'Lipa TSh 1,000 ili kupakua':'Fungua / Pakua PDF')+'</button>'+'</article>').join(''):'<div class="item">Bado hakuna nyenzo zilizochapishwa. Msimamizi ataongeza vitabu na mitihani.</div>';
  document.querySelectorAll('[data-download]').forEach(b=>b.onclick=()=>downloadResource(b.dataset.download));
 }
 ['q','kind','level'].forEach(id=>$(id).addEventListener('input',render));
@@ -80,7 +80,7 @@ async function downloadResource(id){const r=resources.find(x=>x.id===id);if(!r)r
  if(r.is_paid){
   const {data:approved,error:checkError}=await db.from('payment_submissions').select('id').eq('resource_id',r.id).eq('user_id',currentUser.id).eq('status','approved').limit(1);
   if(checkError){message('paymsg','Imeshindikana kuhakiki malipo: '+checkError.message,true);return}
-  if(!approved||approved.length===0){choosePayment(r.id);message('paymsg','Nyenzo hii inahitaji malipo ya TSh '+Number(r.price_tzs||500).toLocaleString('en-US')+'. Tuma Tigo Pesa kisha jaza kumbukumbu ya muamala hapa chini.');return}
+  if(!approved||approved.length===0){choosePayment(r.id);message('paymsg','Nyenzo hii inahitaji malipo ya TSh '+Number(r.price_tzs||1000).toLocaleString('en-US')+'. Tuma Tigo Pesa kisha jaza kumbukumbu ya muamala hapa chini.');return}
  }
  const {data,error}=await db.storage.from('materials').createSignedUrl(r.file_path,90);
  if(error){message('paymsg','Imeshindikana kufungua PDF: '+error.message,true);return}
@@ -94,7 +94,7 @@ $('showupload').onclick=()=>{$('resourceform').classList.remove('hidden');$('adm
 $('showpayments').onclick=loadPayments;
 $('resourceform').onsubmit=async e=>{e.preventDefault();clearMsg('adminmsg');if(!isAdmin){message('adminmsg','Huna ruhusa ya msimamizi.',true);return}const f=$('rfile').files[0];if(!f||f.type!=='application/pdf'){message('adminmsg','Chagua faili la PDF.',true);return}
  const id=crypto.randomUUID(),path=id+'/'+f.name.replace(/[^a-zA-Z0-9._-]/g,'_');let up=await db.storage.from('materials').upload(path,f,{contentType:'application/pdf',upsert:false});if(up.error){message('adminmsg','PDF haikupakiwa: '+up.error.message,true);return}
- const row={title:$('rtitle').value.trim(),kind:$('rkind').value,subject:$('rsubject').value.trim(),level:$('rlevel').value.trim(),year:$('ryear').value?Number($('ryear').value):null,description:$('rdesc').value.trim(),is_paid:$('rpaid').checked,price_tzs:500,file_path:path,published:$('rpublished').checked,created_by:currentUser.id};
+ const row={title:$('rtitle').value.trim(),kind:$('rkind').value,subject:$('rsubject').value.trim(),level:$('rlevel').value.trim(),year:$('ryear').value?Number($('ryear').value):null,description:$('rdesc').value.trim(),is_paid:$('rpaid').checked,price_tzs:1000,file_path:path,published:$('rpublished').checked,created_by:currentUser.id};
  const {error}=await db.from('resources').insert(row);if(error){await db.storage.from('materials').remove([path]);message('adminmsg','Nyenzo haijahifadhiwa: '+error.message,true);return}
  message('adminmsg','Nyenzo imehifadhiwa kikamilifu.');e.target.reset();await loadResources();
 };
