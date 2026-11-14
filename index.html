@@ -24,7 +24,7 @@ small{color:#617184}@media(max-width:650px){.controls{grid-template-columns:1fr}
 
 <div id="appcontent" class="hidden">
 <section class="hero"><h1>Karibu kwenye maktaba ya elimu</h1><p>Tafuta vitabu, mitihani ya nyuma na nyenzo za kujifunzia.</p>
-<div class="controls"><input id="q" placeholder="Tafuta jina, somo au mwaka"><select id="kind"><option value="">Aina zote</option><option>Kitabu</option><option>Mtihani</option><option>Nyenzo nyingine</option></select><select id="level"><option value="">Darasa / kidato chote</option></select></div></section>
+<div class="controls"><input id="q" placeholder="Tafuta jina, somo au mwaka"><select id="kind"><option value="">Aina zote</option><option>Kitabu</option><option>Mtihani</option><option>Nyenzo nyingine</option></select><select id="level"><option value="">Madarasa na vidato vyote</option><optgroup label="Shule ya Msingi"><option>Darasa la Kwanza</option><option>Darasa la Pili</option><option>Darasa la Tatu</option><option>Darasa la Nne</option><option>Darasa la Tano</option><option>Darasa la Sita</option><option>Darasa la Saba</option></optgroup><optgroup label="O-Level"><option>Form One</option><option>Form Two</option><option>Form Three</option><option>Form Four</option></optgroup><optgroup label="A-Level"><option>Form Five</option><option>Form Six</option></optgroup></select></div></section>
 
 <h2>Nyenzo zilizochapishwa</h2><section id="catalog" class="grid"><div class="item">Inapakia maktaba...</div></section>
 
@@ -32,7 +32,7 @@ small{color:#617184}@media(max-width:650px){.controls{grid-template-columns:1fr}
 <form id="payform"><label>Nyenzo<input id="paytitle" readonly required placeholder="Chagua nyenzo ya kulipia"></label><input id="payid" type="hidden"><label>Jina la mtumaji<input id="payer" required></label><label>Namba ya simu<input id="payphone" required></label><label>Namba ya muamala<input id="reference" required></label><label>Maelezo (si lazima)<textarea id="notes"></textarea></label><button>Tuma ombi la uthibitisho</button></form><div id="paymsg" aria-live="polite"></div></section>
 
 <section class="panel hidden" id="admin"><h2>Dashibodi ya msimamizi</h2><div class="tabs"><button id="showupload">Ongeza kitabu/mtihani</button><button class="secondary" id="showpayments">Maombi ya malipo</button></div>
-<form id="resourceform"><label>Jina la nyenzo<input id="rtitle" required></label><div class="row"><label>Aina<select id="rkind"><option>Kitabu</option><option>Mtihani</option><option>Nyenzo nyingine</option></select></label><label>Somo<input id="rsubject"></label></div><div class="row"><label>Darasa/kidato<input id="rlevel" placeholder="Mfano: Kidato cha 2"></label><label>Mwaka<input id="ryear" type="number" min="1900" max="2100"></label></div><label>Maelezo<textarea id="rdesc"></textarea></label><label>PDF<input id="rfile" type="file" accept="application/pdf" required></label><label><input id="rpaid" type="checkbox" style="width:auto"> Nyenzo ya kulipia (TSh 1,000)</label><label><input id="rpublished" type="checkbox" checked style="width:auto"> Chapisha mara moja</label><button>Hifadhi nyenzo</button></form>
+<form id="resourceform"><label>Jina la nyenzo<input id="rtitle" required></label><div class="row"><label>Aina<select id="rkind"><option>Kitabu</option><option>Mtihani</option><option>Nyenzo nyingine</option></select></label><label>Somo<input id="rsubject"></label></div><div class="row"><label>Darasa/kidato<select id="rlevel" required><option value="">Chagua darasa/kidato</option><optgroup label="Shule ya Msingi"><option>Darasa la Kwanza</option><option>Darasa la Pili</option><option>Darasa la Tatu</option><option>Darasa la Nne</option><option>Darasa la Tano</option><option>Darasa la Sita</option><option>Darasa la Saba</option></optgroup><optgroup label="O-Level"><option>Form One</option><option>Form Two</option><option>Form Three</option><option>Form Four</option></optgroup><optgroup label="A-Level"><option>Form Five</option><option>Form Six</option></optgroup></select></label><label>Mwaka<input id="ryear" type="number" min="1900" max="2100"></label></div><label>Maelezo<textarea id="rdesc"></textarea></label><label>PDF<input id="rfile" type="file" accept="application/pdf" required></label><label><input id="rpaid" type="checkbox" style="width:auto"> Nyenzo ya kulipia (TSh 1,000)</label><label><input id="rpublished" type="checkbox" checked style="width:auto"> Chapisha mara moja</label><button>Hifadhi nyenzo</button></form>
 <div id="adminlist" class="hidden"></div><div id="adminmsg" aria-live="polite"></div></section>
 
 <footer>© EDUCATIONAL MATERIALS · Tanzania</footer></div></main>
@@ -66,7 +66,7 @@ async function loadResources(){
  }
  const {data,error}=await db.from('resources').select('*').eq('published',true).order('created_at',{ascending:false});
  if(error){$('catalog').innerHTML='<div class="item">Imeshindikana kupakia. Hakikisha umeendesha SQL ya Supabase. '+error.message+'</div>';return}
- resources=data||[];const levels=[...new Set(resources.map(x=>x.level).filter(Boolean))];$('level').innerHTML='<option value="">Darasa / kidato chote</option>'+levels.map(x=>'<option>'+esc(x)+'</option>').join('');
+ resources=data||[];
  render();
 }
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
