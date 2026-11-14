@@ -54,27 +54,47 @@ const $=id=>document.getElementById(id);
 function message(id,text,err=false){$(id).className='msg '+(err?'error':'success');$(id).textContent=text}
 function clearMsg(id){$(id).className='';$(id).textContent=''}
 
+const tutorLessons=[
+[/\b(fraction|sehemu|vifungu)\b/i,'Hisabati','Sehemu (fraction) huonyesha sehemu ya kitu kizima. Katika 3/4, 3 ni numerator (idadi ya sehemu zilizochukuliwa) na 4 ni denominator (idadi ya sehemu sawa katika kizima). Mfano: 1/4 + 2/4 = 3/4. Ikiwa denominator ni tofauti, tafuta denominator ya pamoja kwanza.','Rahisisha 2/4.'],
+[/\b(algebra|x\s*=|equation|milinganyo|kipe)\b/i,'Hisabati','Aljebra hutumia herufi kuwakilisha namba zisizojulikana. Mfano: x + 5 = 12. Toa 5 pande zote mbili: x = 12 − 5 = 7. Kumbuka kufanya operesheni ileile pande zote mbili za mlinganyo.','Tatua: x + 8 = 15.'],
+[/\b(area|eneo|perimeter|mzingo|volume|ujazo)\b/i,'Hisabati','Eneo ni nafasi inayofunikwa na umbo; mzingo ni jumla ya urefu wa kingo zake. Kwa mstatili: eneo = urefu × upana; mzingo = 2 × (urefu + upana). Ujazo wa boksi = urefu × upana × kimo.','Mstatili wa urefu 6 cm na upana 4 cm una eneo gani?'],
+[/\b(asilimia|percent|percentage)\b/i,'Hisabati','Asilimia maana yake ni sehemu kati ya 100. Ili kupata asilimia ya kiasi: (asilimia ÷ 100) × kiasi. Mfano: 20% ya 50 = 20/100 × 50 = 10.','Pata 15% ya 200.'],
+[/\b(photosynthesis|usanisinuru|mmea|plant|biology|seli|cell|respiration)\b/i,'Biology / Sayansi','Seli ndiyo kitengo cha msingi cha uhai. Mimea ya kijani hutengeneza chakula kwa usanisinuru: hutumia mwanga, maji na hewa ya ukaa kutengeneza glukosi na kutoa oksijeni. Mizizi hufyonza maji, shina husafirisha, na majani hufanya usanisinuru.','Taja vitu vinavyohitajika kwa usanisinuru.'],
+[/\b(atom|atomi|element|compound|chemical|chemistry|asidi|acid|base|periodic)\b/i,'Chemistry','Atomi ni chembe ndogo ya elementi inayohifadhi sifa zake za kikemia. Kiwanja hutengenezwa elementi mbili au zaidi zinapoungana kikemia kwa uwiano maalumu. Asidi na besi zinaweza kuitikia na kutengeneza chumvi na maji katika neutralization.','Tofautisha elementi na kiwanja.'],
+[/\b(force|nguvu|motion|mwendo|energy|nishati|electric|umeme|physics|density|msongamano)\b/i,'Physics','Fizikia huchunguza matter, nishati na mwingiliano wake. Kwa mwendo wa kasi ya wastani: kasi = umbali ÷ muda. Nguvu hupimwa kwa newton (N), nishati kwa joule (J), na umeme wa mkondo kwa ampere (A).','Gari linasafiri km 120 kwa saa 2. Kasi yake ya wastani ni ipi?'],
+[/\b(nomino|kitenzi| kivumishi|sarufi|methali|nahau|tamathali|kiswahili)\b/i,'Kiswahili','Nomino ni neno linalotaja mtu, kitu, mahali au hali; mfano mwanafunzi, kitabu na furaha. Kitenzi huonyesha tendo au hali; mfano anakimbia. Kivumishi hueleza sifa ya nomino; mfano kitabu kizuri.','Taja nomino mbili na vitenzi viwili.'],
+[/\b(verb|noun|adjective|tense|grammar|english|pronoun|preposition|past tense|present tense)\b/i,'English Language','A noun names a person, place, thing, or idea. A verb expresses an action or state. An adjective describes a noun. Example: “The clever student reads.” Student = noun, clever = adjective, reads = verb.','Write one sentence and identify its noun and verb.'],
+[/\b(history|historia|vita|uhuru|ukoloni|mtemi|trade union)\b/i,'History','Historia huchunguza matukio ya zamani kwa kutumia ushahidi kama nyaraka, simulizi, picha na mabaki ya vitu. Unapojibu swali la historia, eleza tukio, muda/mahali, sababu na matokeo; tofautisha ushahidi na maoni.','Eleza tofauti kati ya sababu na matokeo ya tukio la kihistoria.'],
+[/\b(geography|jiografia|climate|hali ya hewa|weather|ramani|map|erosion|mmomonyoko|volcano)\b/i,'Geography','Jiografia huchunguza mazingira ya dunia na shughuli za binadamu. Hali ya hewa ni wastani wa muda mrefu wa hali za anga; weather ni hali ya anga ya muda mfupi. Ramani hutumia alama, kipimo na dira kueleza eneo.','Taja tofauti moja kati ya hali ya hewa na weather.'],
+[/\b(civics|uraia|serikali|democracy|demokrasia|katiba|constitution|haki|wajibu)\b/i,'Civics','Uraia hufundisha haki, wajibu na ushiriki wa raia katika jamii. Katiba ni sheria kuu inayoweka misingi ya uongozi na haki. Demokrasia huhusisha ushiriki wa wananchi na uwajibikaji wa viongozi.','Taja haki mbili na wajibu mbili za raia.'],
+[/\b(commerce|biashara|market|soko|demand|supply|mahitaji|ugavi)\b/i,'Commerce','Biashara huhusu uzalishaji, usambazaji na ubadilishanaji wa bidhaa na huduma. Demand ni kiasi ambacho wanunuzi wako tayari na wana uwezo wa kununua; supply ni kiasi ambacho wauzaji wako tayari kuuza kwa bei fulani.','Eleza tofauti ya demand na supply.'],
+[/\b(bookkeeping|accounting|uhasibu|debit|credit|ledger|balance sheet)\b/i,'Bookkeeping','Uhasibu hurekodi na kupanga miamala ya fedha. Katika mfumo wa double entry, kila muamala huathiri angalau akaunti mbili na jumla ya debit hulingana na jumla ya credit. Hifadhi risiti na ushahidi wa miamala.','Kwa nini kila muamala huandikwa debit na credit?'],
+[/\b(computer|kompyuta|keyboard|hardware|software|internet|cpu|data|programming)\b/i,'Computer Studies','Hardware ni vifaa vinavyoshikika kama keyboard, monitor na CPU. Software ni programu zinazoelekeza kompyuta kufanya kazi. Data ni taarifa ghafi; baada ya kuchakatwa na kupewa maana huwa information.','Tofautisha hardware na software kwa mifano.'],
+[/\b(agriculture|kilimo|soil|udongo|irrigation|umwagiliaji|crop|mazao)\b/i,'Agriculture','Kilimo bora huanza na kuchagua zao linalofaa eneo, kuandaa udongo, kupanda kwa nafasi sahihi, kudhibiti magugu na wadudu, na kuvuna kwa wakati. Mzunguko wa mazao unaweza kusaidia afya ya udongo.','Taja faida mbili za kubadilisha mazao shambani.'],
+[/\b(literature|fasihi|poem|shairi|plot|wahusika|character|theme|dhamira)\b/i,'Literature','Fasihi huchunguza kazi za kisanaa na ujumbe wake. Unapochambua kazi, angalia dhamira (ujumbe mkuu), wahusika, muundo, mtindo na lugha. Toa mfano kutoka kwenye kazi husika ili kuunga mkono hoja.','Dhamira ni nini katika kazi ya fasihi?'],
+[/\b(french|français|bonjour|merci)\b/i,'French','French: “Bonjour” maana yake ni hujambo/salamu ya mchana; “Merci” ni asante; “Au revoir” ni kwa heri. “Je m’appelle…” humaanisha “Ninaitwa…”.','Tafsiri “Merci” kwa Kiswahili.'],
+[/\b(arabic|kiarabu|العربية|سلام|كتاب)\b/i,'Arabic','Katika Kiarabu, “السلام عليكم” ni salamu ya amani, “شكراً” ni asante, na “كتاب” ni kitabu. Jifunze msamiati pamoja na namna ya kuutumia katika sentensi.','“كتاب” maana yake nini?'],
+[/\b(islam|islamic|dini|qur.?an|qurani|fiqh|swala|sala|wudhu|udhu|zakat|sawm|funga)\b/i,'Islamic Religious Knowledge','Masomo ya dini yanahitaji kurejea Qur’ani, Hadith na maelezo ya wanazuoni wanaoaminika. Kwa masuala ya fiqhi yenye tofauti za madhehebu, taja madhehebu au mwalimu unayefuata ili jibu lisichanganye mitazamo.','Ni mada gani hasa unayotaka kujifunza? Taja pia madhehebu ikiwa swali ni la fiqhi.'],
+[/\b(food|nutrition|lishe|vitamin|protini|protein|carbohydrate|balanced diet)\b/i,'Food and Nutrition','Lishe bora huwa na mchanganyiko wa vyakula vinavyotoa nishati, kujenga mwili na kulinda afya. Makundi muhimu ni wanga, protini, mafuta, vitamini, madini, maji na nyuzinyuzi. Mahitaji hutofautiana kulingana na umri na shughuli.','Taja kazi moja ya protini mwilini.'],
+[/\b(physical education|mazoezi|fitness|michezo|warm.?up|kunyoosha)\b/i,'Physical Education','Elimu ya viungo hujenga afya na stadi za mwili. Warm-up huandaa misuli na moyo kabla ya mazoezi; cool-down husaidia mwili kurudi taratibu katika hali ya kawaida. Tumia mbinu salama na kiwango kinachokufaa.','Kwa nini ni muhimu kufanya warm-up?'],
+[/\b(fine art|sanaa|drawing|uchoraji|colour|rangi|perspective)\b/i,'Fine Art','Sanaa ya kuona hutumia vipengele kama mstari, umbo, rangi, texture, nafasi na mwanga/kivuli. Kanuni za usanifu ni pamoja na balance, contrast, emphasis na proportion.','Taja vipengele vitatu vya sanaa ya kuona.']
+];
 function tutorReply(){
  const subject=$('tutorsubject').value, q=$('tutorquestion').value.trim(), out=$('tutoranswer');
  if(!q){message('tutoranswer','Andika swali lako kwanza.',true);out.classList.remove('hidden');return;}
  let answer='';
- const arithmetic=q.match(/^(?:ni\s*)?(\d+(?:\.\d+)?)\s*([+*/×÷-])\s*(\d+(?:\.\d+)?)\s*\??$/);
+ const arithmetic=q.match(/(?:^|\s)(-?\d+(?:\.\d+)?)\s*([+*/×÷-])\s*(-?\d+(?:\.\d+)?)(?:\s*\??)$/);
  if(arithmetic){
   const a=Number(arithmetic[1]),b=Number(arithmetic[3]),op=arithmetic[2];
   const result=op==='+'?a+b:op==='-'?a-b:(op==='*'||op==='×')?a*b:(b===0?null:a/b);
-  answer=result===null?'Huwezi kugawanya namba kwa sifuri.':('Tufanye hatua kwa hatua:\n1. Namba ya kwanza ni '+a+'.\n2. Alama ya operesheni ni '+op+'.\n3. Namba ya pili ni '+b+'.\n4. Jibu ni '+result+'.\nJaribu swali jingine ili kufanya mazoezi.');
- }else if(/sehemu za mmea|plant parts/i.test(q)){
-  answer='Sehemu kuu za mmea ni mizizi, shina, majani, maua na matunda. Mizizi hufyonza maji na madini; shina hushikilia mmea na kusafirisha maji; majani hutengeneza chakula kwa kutumia mwanga.\nSwali la mazoezi: Ni sehemu gani hufyonza maji kutoka ardhini?';
- }else if(/nomino/i.test(q)){
-  answer='Nomino ni neno linalotaja mtu, kitu, mahali au hali. Mifano: mwanafunzi, kitabu, Dar es Salaam na furaha.\nJaribu: Taja nomino mbili unazoziona darasani.';
- }else if(/photosynthesis|usanisinuru/i.test(q)){
-  answer='Usanisinuru ni mchakato ambao mimea ya kijani hutumia mwanga wa jua, maji na hewa ya ukaa kutengeneza chakula (glucose), na kutoa oksijeni. Hutokea hasa kwenye majani.\nSwali la mazoezi: Mimea huhitaji vitu gani vitatu kwa usanisinuru?';
+  answer=result===null?'Huwezi kugawanya namba kwa sifuri.':'Hatua kwa hatua:\n1. Anza na '+a+'.\n2. Tumia operesheni '+op+'.\n3. Fanya hesabu na '+b+'.\n4. Jibu: '+result+'.';
  }else{
-  answer='Asante kwa swali lako la '+subject+'. Katika toleo hili la majaribio bado sina uwezo wa kujibu mada zote. Ili nikusaidie vizuri, andika mada ndogo unayosoma na darasa/kidato chako, au jaribu mfano wa Hisabati (mfano 25 × 4), “nomino”, “sehemu za mmea” au “usanisinuru”.';
+  const lesson=tutorLessons.find(x=>x[0].test(q));
+  if(lesson){answer='Somo: '+lesson[1]+'\n\n'+lesson[2]+'\n\nZoezi: '+lesson[3]+'\n\nAndika jibu lako ili ujipime.';}
+  else answer='Nimepokea swali lako katika somo la '+subject+'. Ili nikufundishe kwa usahihi, taja mada ndogo au andika mfano/zoezi lenyewe. Ninaweza kueleza mada za msingi katika masomo yaliyo kwenye orodha, lakini toleo hili bado si AI inayoweza kujibu kila swali au kusoma PDF moja kwa moja.';
  }
  out.classList.remove('hidden');out.className='msg';out.style.whiteSpace='pre-line';out.textContent=answer;
 }
-
 document.addEventListener('DOMContentLoaded',()=>{const b=$('asktutor');if(b)b.addEventListener('click',tutorReply);});
 async function refreshSession(){const {data}=await db.auth.getSession();currentUser=data.session?.user||null;await updateAccount();await loadResources()}
 async function updateAccount(){
