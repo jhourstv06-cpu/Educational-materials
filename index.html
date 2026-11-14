@@ -37,6 +37,20 @@ small{color:#617184}@media(max-width:650px){.controls{grid-template-columns:1fr}
 <div id="adminlist" class="hidden"></div><div id="adminmsg" aria-live="polite"></div></section>
 
 
+<section class="panel" id="booksearch">
+<h2>🔎 Mfumo wa Kutafuta Vitabu Mtandaoni</h2>
+<p>Tafuta vitabu kwa jina, mwandishi au mada. Mfumo huu hutumia katalogi ya Open Library bila API key. Upatikanaji wa kitabu kamili hutegemea haki za uchapishaji na huduma inayokitoa.</p>
+<div class="row">
+<label style="flex:1">Jina la kitabu, mwandishi au mada
+<input id="bookquery" type="search" placeholder="Mfano: Biology, Qur'an, Shakespeare"></label>
+<button id="searchbooks" type="button">Tafuta vitabu</button>
+</div>
+<div id="bookstatus" class="msg" aria-live="polite">Andika jina la kitabu au mada kisha bonyeza Tafuta vitabu.</div>
+<div id="bookresults" aria-live="polite"></div>
+<small>Matokeo yanaweza kuwa na vitabu vya kusoma mtandaoni, vya kuazima au taarifa za kitabu pekee. Tumia viungo vya watoa huduma na heshimu hakimiliki.</small>
+</section>
+
+
 <section class="panel" id="tutor"><h2>👩🏽‍🏫 Mwalimu wa Masomo (Toleo la Majaribio)</h2>
 <p>Uliza swali au andika mada unayotaka kufundishwa. Mwalimu huyu wa majaribio hutumia mifano michache iliyowekwa ndani ya tovuti; bado si AI inayojibu maswali yote.</p>
 <label>Somo<select id="tutorsubject"><option>Chagua somo</option><option>Hisabati</option><option>Kiswahili</option><option>English</option><option>Biology</option><option>Chemistry</option><option>Physics</option><option>Historia</option><option>Jiografia</option><option>Civics</option><option>Mengineyo</option></select></label>
@@ -95,7 +109,33 @@ function tutorReply(){
  }
  out.classList.remove('hidden');out.className='msg';out.style.whiteSpace='pre-line';out.textContent=answer;
 }
-document.addEventListener('DOMContentLoaded',()=>{const b=$('asktutor');if(b)b.addEventListener('click',tutorReply);});
+
+async function searchOnlineBooks(){
+ const q=$('bookquery').value.trim(),status=$('bookstatus'),results=$('bookresults'),btn=$('searchbooks');
+ if(!q){status.className='msg error';status.textContent='Andika jina la kitabu, mwandishi au mada kwanza.';$('bookquery').focus();return;}
+ btn.disabled=true;btn.textContent='Inatafuta...';status.className='msg';status.textContent='Tunasaka vitabu kwenye katalogi ya mtandaoni...';results.innerHTML='';
+ try{
+  const url='https://openlibrary.org/search.json?q='+encodeURIComponent(q)+'&limit=12&fields=title,author_name,first_publish_year,key,cover_i,edition_count,language';
+  const response=await fetch(url,{headers:{'Accept':'application/json'}});
+  if(!response.ok)throw new Error('Huduma ya katalogi haijibu kwa sasa ('+response.status+').');
+  const data=await response.json(),docs=data.docs||[];
+  if(!docs.length){status.textContent='Hakuna kitabu kilichopatikana. Jaribu jina jingine au andika mada kwa Kiingereza.';return;}
+  status.className='msg success';status.textContent='Vitabu '+docs.length+' vimepatikana. Chagua kitabu kuona taarifa zaidi.';
+  results.innerHTML=docs.map(book=>{
+   const title=esc(book.title||'Kitabu bila jina'),authors=esc((book.author_name||['Mwandishi hajatajwa']).slice(0,3).join(', '));
+   const year=book.first_publish_year?' · '+esc(book.first_publish_year):'';
+   const cover=book.cover_i?'https://covers.openlibrary.org/b/id/'+encodeURIComponent(book.cover_i)+'-M.jpg':'';
+   const link='https://openlibrary.org'+(book.key||'');
+   return '<article class="item" style="display:flex;gap:14px;align-items:flex-start">'+(cover?'<img src="'+cover+'" alt="Jalada la '+title+'" loading="lazy" style="width:76px;max-height:112px;object-fit:cover;border-radius:6px">':'')+'<div style="min-width:0;flex:1"><h3>'+title+'</h3><p>'+authors+year+'</p><p mathe>'+esc(book.edition_count||1)+' toleo/ma toleo</p><a href="'+link+'" target="_blank" rel="noopener noreferrer">Fungua taarifa / angalia usomaji kwenye Open Library</a></div></article>';
+  }).join('');
+ }catch(error){status.className='msg error';status.textContent='Imeshindikana kutafuta kwa sasa. Hakikisha intaneti ipo kisha jaribu tena. '+error.message;}
+ finally{btn.disabled=false;btn.textContent='Tafuta vitabu';}
+}
+document.addEventListener('DOMContentLoaded',()=>{
+ const b=$('asktutor');if(b)b.addEventListener('click',tutorReply);
+ const sb=$('searchbooks');if(sb)sb.addEventListener('click',searchOnlineBooks);
+ const input=$('bookquery');if(input)input.addEventListener('keydown',e=>{if(e.key==='Enter')searchOnlineBooks();});
+});
 async function refreshSession(){const {data}=await db.auth.getSession();currentUser=data.session?.user||null;await updateAccount();await loadResources()}
 async function updateAccount(){
  $('signedout').classList.toggle('hidden',!!currentUser);$('signedin').classList.toggle('hidden',!currentUser);
