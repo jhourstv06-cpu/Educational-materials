@@ -37,6 +37,15 @@ small{color:#617184}@media(max-width:650px){.controls{grid-template-columns:1fr}
 <div id="adminlist" class="hidden"></div><div id="adminmsg" aria-live="polite"></div></section>
 
 
+<section class="panel" id="tiesearch">
+<h2>📚 Tafuta Vitabu vya TIE</h2>
+<p>Tafuta vitabu na nyenzo zilizochapishwa kwenye maktaba rasmi ya Taasisi ya Elimu Tanzania (TIE). Matokeo yatafunguka kwenye utafutaji wa wavuti uliolenga tovuti ya TIE; chagua kitabu ili kukisoma kwenye maktaba rasmi.</p>
+<label>Jina la kitabu, somo, darasa au mada
+<input id="tiequery" type="search" placeholder="Mfano: Biology Form One, Hisabati Darasa la Saba"></label>
+<button id="searchtie" type="button">Tafuta kwenye TIE</button>
+<p><small>Kiungo rasmi: <a href="https://ol.tie.go.tz/" target="_blank" rel="noopener noreferrer">TIE Online Library</a>. Utafutaji huu hutegemea kurasa za TIE zilizoorodheshwa na injini ya utafutaji; hauhakikishi kila kitabu au ripoti kupatikana.</small></p>
+</section>
+
 <section class="panel" id="booksearch">
 <h2>🔎 Mfumo wa Kutafuta Vitabu Mtandaoni</h2>
 <p>Tafuta vitabu kwa jina, mwandishi au mada. Mfumo huu hutumia katalogi ya Open Library bila API key. Upatikanaji wa kitabu kamili hutegemea haki za uchapishaji na huduma inayokitoa.</p>
@@ -110,6 +119,12 @@ function tutorReply(){
  out.classList.remove('hidden');out.className='msg';out.style.whiteSpace='pre-line';out.textContent=answer;
 }
 
+function searchTIE(){
+ const q=$('tiequery').value.trim();
+ if(!q){$('tiequery').focus();return;}
+ const url='https://www.google.com/search?q='+encodeURIComponent('site:ol.tie.go.tz '+q);
+ window.open(url,'_blank','noopener');
+}
 async function searchOnlineBooks(){
  const q=$('bookquery').value.trim(),status=$('bookstatus'),results=$('bookresults'),btn=$('searchbooks');
  if(!q){status.className='msg error';status.textContent='Andika jina la kitabu, mwandishi au mada kwanza.';$('bookquery').focus();return;}
