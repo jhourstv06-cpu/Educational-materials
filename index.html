@@ -5,7 +5,7 @@
 <style>
 :root{--navy:#10243a;--blue:#1769aa;--bg:#f4f7fb;--line:#dce5ef;--green:#16794a;--red:#a52b2b}*{box-sizing:border-box}
 body{margin:0;font:16px/1.55 system-ui;background:var(--bg);color:#172536}header{background:linear-gradient(120deg,#10243a,#1769aa);color:white;padding:22px max(18px,calc((100% - 1080px)/2))}
-.brand{font-size:1.4rem;font-weight:850;letter-spacing:.04em}main{max-width:1080px;margin:auto;padding:24px 18px}
+.brand{display:flex;align-items:center;gap:10px;font-size:1.4rem;font-weight:850;letter-spacing:.04em}.brand-logo{width:42px;height:42px;object-fit:contain;border-radius:50%;background:#fff;padding:2px;flex:0 0 42px}main{max-width:1080px;margin:auto;padding:24px 18px}
 .hero,.panel,.item{background:white;border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:16px}
 h1{color:var(--navy);margin:0}p{color:#617184}.controls{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px;margin-top:16px}
 input,select,textarea,button{font:inherit;padding:11px;border:1px solid var(--line);border-radius:10px;width:100%;background:white}
@@ -18,7 +18,7 @@ form{display:grid;gap:10px;max-width:650px}label{font-weight:650;display:grid;ga
 footer{text-align:center;padding:25px;color:#617184}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.tabs button{width:auto}
 small{color:#617184}@media(max-width:650px){.controls{grid-template-columns:1fr}.row{display:grid}}
 </style></head><body>
-<header><div class="brand">EDUCATIONAL MATERIALS</div><div>Maktaba ya vitabu na mitihani kwa wanafunzi wa Tanzania</div></header>
+<header><div class="brand"><img class="brand-logo" src="logo-small.jpg" alt="EDUCATIONAL MATERIALS logo">EDUCATIONAL MATERIALS</div><div>Maktaba ya vitabu na mitihani kwa wanafunzi wa Tanzania</div></header>
 <main>
 <section class="panel" id="account"><h2>Akaunti yako</h2><div id="signedout"><div class="row"><label>Barua pepe<input id="email" type="email" autocomplete="email" required></label><label>Nywila<input id="password" type="password" autocomplete="current-password" minlength="6" required></label></div><div class="row"><button id="login">Ingia</button><button class="secondary" id="signup">Fungua akaunti</button></div></div><div id="signedin" class="hidden"><p id="who"></p><button class="secondary" id="logout">Toka</button></div><div id="authmsg" aria-live="polite"></div></section>
 
