@@ -36,6 +36,14 @@ small{color:#617184}@media(max-width:650px){.controls{grid-template-columns:1fr}
 <form id="resourceform"><label>Jina la nyenzo<input id="rtitle" required></label><div class="row"><label>Sehemu/Aina ya nyenzo<select id="rkind"><option>Kitabu</option><option>Mtihani</option><option>Nyenzo nyingine</option><option>Kitabu cha Dini ya Kiislamu</option><option>Tafsiri ya Qur’ani</option><option>Ndoa</option><option>Mirathi</option><option>Kuoga Janaba</option><option>Ripoti za Mitihani ya Miaka Iliyopita</option></select></label><label>Somo<select id="rsubject" required><option value="">Masomo yote</option><optgroup label="Msingi"><option>Kiswahili</option><option>English</option><option>Hisabati</option><option>Sayansi</option><option>Maarifa ya Jamii</option><option>Stadi za Kazi</option><option>Elimu ya Dini ya Kiislamu</option><option>Maarifa ya Dini ya Kiislamu</option></optgroup><optgroup label="Sekondari"><option>Basic Mathematics</option><option>Mathematics</option><option>Biology</option><option>Chemistry</option><option>Physics</option><option>Geography</option><option>History</option><option>Civics</option><option>English Language</option><option>Kiswahili</option><option>Commerce</option><option>Bookkeeping</option><option>Computer Studies</option><option>Agriculture</option><option>Literature in English</option><option>French</option><option>Arabic</option><option>Islamic Religious Knowledge</option><option>Fine Art</option><option>Food and Nutrition</option><option>Physical Education</option></optgroup></select></label></div><div class="row"><label>Darasa/kidato (kwa nyenzo za shule tu)<select id="rlevel"><option value="">Chagua darasa/kidato</option><optgroup label="Shule ya Msingi"><option>Darasa la Kwanza</option><option>Darasa la Pili</option><option>Darasa la Tatu</option><option>Darasa la Nne</option><option>Darasa la Tano</option><option>Darasa la Sita</option><option>Darasa la Saba</option></optgroup><optgroup label="O-Level"><option>Form One</option><option>Form Two</option><option>Form Three</option><option>Form Four</option></optgroup><optgroup label="A-Level"><option>Form Five</option><option>Form Six</option></optgroup></select></label><label>Mwaka<input id="ryear" type="number" min="1900" max="2100"></label></div><label>Maelezo<textarea id="rdesc"></textarea></label><label>PDF<input id="rfile" type="file" accept="application/pdf" required></label><small id="pdfinfo">PDF itajaribiwa kuandaliwa kabla ya kupakiwa. Ikiwa huduma hiyo haipatikani, PDF ya asili itapakiwa.</small><label><input id="rpaid" type="checkbox" style="width:auto"> Nyenzo ya kulipia (TSh 1,000)</label><label><input id="rpublished" type="checkbox" checked style="width:auto"> Chapisha mara moja</label><button>Hifadhi nyenzo</button></form>
 <div id="adminlist" class="hidden"></div><div id="adminmsg" aria-live="polite"></div></section>
 
+
+<section class="panel" id="tutor"><h2>👩🏽‍🏫 Mwalimu wa Masomo (Toleo la Majaribio)</h2>
+<p>Uliza swali au andika mada unayotaka kufundishwa. Mwalimu huyu wa majaribio hutumia mifano michache iliyowekwa ndani ya tovuti; bado si AI inayojibu maswali yote.</p>
+<label>Somo<select id="tutorsubject"><option>Chagua somo</option><option>Hisabati</option><option>Kiswahili</option><option>English</option><option>Biology</option><option>Chemistry</option><option>Physics</option><option>Historia</option><option>Jiografia</option><option>Civics</option><option>Mengineyo</option></select></label>
+<label>Swali lako<textarea id="tutorquestion" rows="3" placeholder="Mfano: Nisaidie kuelewa 25 × 4 au nielezee sehemu za mmea"></textarea></label>
+<button id="asktutor">Uliza mwalimu</button>
+<div id="tutoranswer" class="msg hidden" aria-live="polite"></div>
+</section>
 <footer>© EDUCATIONAL MATERIALS · Tanzania</footer></div></main>
 <script>
 const SUPABASE_URL="https://wntxumyzbenrefqehsax.supabase.co";
@@ -45,6 +53,29 @@ let currentUser=null,isAdmin=false,resources=[];
 const $=id=>document.getElementById(id);
 function message(id,text,err=false){$(id).className='msg '+(err?'error':'success');$(id).textContent=text}
 function clearMsg(id){$(id).className='';$(id).textContent=''}
+
+function tutorReply(){
+ const subject=$('tutorsubject').value, q=$('tutorquestion').value.trim(), out=$('tutoranswer');
+ if(!q){message('tutoranswer','Andika swali lako kwanza.',true);out.classList.remove('hidden');return;}
+ let answer='';
+ const arithmetic=q.match(/^(?:ni\s*)?(\d+(?:\.\d+)?)\s*([+*/×÷-])\s*(\d+(?:\.\d+)?)\s*\??$/);
+ if(arithmetic){
+  const a=Number(arithmetic[1]),b=Number(arithmetic[3]),op=arithmetic[2];
+  const result=op==='+'?a+b:op==='-'?a-b:(op==='*'||op==='×')?a*b:(b===0?null:a/b);
+  answer=result===null?'Huwezi kugawanya namba kwa sifuri.':('Tufanye hatua kwa hatua:\n1. Namba ya kwanza ni '+a+'.\n2. Alama ya operesheni ni '+op+'.\n3. Namba ya pili ni '+b+'.\n4. Jibu ni '+result+'.\nJaribu swali jingine ili kufanya mazoezi.');
+ }else if(/sehemu za mmea|plant parts/i.test(q)){
+  answer='Sehemu kuu za mmea ni mizizi, shina, majani, maua na matunda. Mizizi hufyonza maji na madini; shina hushikilia mmea na kusafirisha maji; majani hutengeneza chakula kwa kutumia mwanga.\nSwali la mazoezi: Ni sehemu gani hufyonza maji kutoka ardhini?';
+ }else if(/nomino/i.test(q)){
+  answer='Nomino ni neno linalotaja mtu, kitu, mahali au hali. Mifano: mwanafunzi, kitabu, Dar es Salaam na furaha.\nJaribu: Taja nomino mbili unazoziona darasani.';
+ }else if(/photosynthesis|usanisinuru/i.test(q)){
+  answer='Usanisinuru ni mchakato ambao mimea ya kijani hutumia mwanga wa jua, maji na hewa ya ukaa kutengeneza chakula (glucose), na kutoa oksijeni. Hutokea hasa kwenye majani.\nSwali la mazoezi: Mimea huhitaji vitu gani vitatu kwa usanisinuru?';
+ }else{
+  answer='Asante kwa swali lako la '+subject+'. Katika toleo hili la majaribio bado sina uwezo wa kujibu mada zote. Ili nikusaidie vizuri, andika mada ndogo unayosoma na darasa/kidato chako, au jaribu mfano wa Hisabati (mfano 25 × 4), “nomino”, “sehemu za mmea” au “usanisinuru”.';
+ }
+ out.classList.remove('hidden');out.className='msg';out.style.whiteSpace='pre-line';out.textContent=answer;
+}
+
+document.addEventListener('DOMContentLoaded',()=>{const b=$('asktutor');if(b)b.addEventListener('click',tutorReply);});
 async function refreshSession(){const {data}=await db.auth.getSession();currentUser=data.session?.user||null;await updateAccount();await loadResources()}
 async function updateAccount(){
  $('signedout').classList.toggle('hidden',!!currentUser);$('signedin').classList.toggle('hidden',!currentUser);
