@@ -113,20 +113,28 @@ function tutorReply(){
 async function searchOnlineBooks(){
  const q=$('bookquery').value.trim(),status=$('bookstatus'),results=$('bookresults'),btn=$('searchbooks');
  if(!q){status.className='msg error';status.textContent='Andika jina la kitabu, mwandishi au mada kwanza.';$('bookquery').focus();return;}
- btn.disabled=true;btn.textContent='Inatafuta...';status.className='msg';status.textContent='Tunasaka vitabu kwenye katalogi ya mtandaoni...';results.innerHTML='';
+ btn.disabled=true;btn.textContent='Inatafuta...';status.className='msg';status.textContent='Tunatafuta vitabu vinavyoweza kufunguliwa au kuazimwa mtandaoni...';results.innerHTML='';
  try{
-  const url='https://openlibrary.org/search.json?q='+encodeURIComponent(q)+'&limit=12&fields=title,author_name,first_publish_year,key,cover_i,edition_count,language';
+  const fields='title,author_name,first_publish_year,key,cover_i,edition_count,language,ia,ebook_access,has_fulltext';
+  const url='https://openlibrary.org/search.json?q='+encodeURIComponent(q)+'&limit=30&fields='+encodeURIComponent(fields);
   const response=await fetch(url,{headers:{'Accept':'application/json'}});
-  if(!response.ok)throw new Error('Huduma ya katalogi haijibu kwa sasa ('+response.status+').');
+  if(!response.ok)throw new Error('Huduma ya vitabu haijibu kwa sasa ('+response.status+').');
   const data=await response.json(),docs=data.docs||[];
-  if(!docs.length){status.textContent='Hakuna kitabu kilichopatikana. Jaribu jina jingine au andika mada kwa Kiingereza.';return;}
-  status.className='msg success';status.textContent='Vitabu '+docs.length+' vimepatikana. Chagua kitabu kuona taarifa zaidi.';
-  results.innerHTML=docs.map(book=>{
+  const readable=docs.filter(b=>b.has_fulltext===true&&Array.isArray(b.ia)&&b.ia.length&&['public','borrowable'].includes(b.ebook_access));
+  if(!readable.length){
+   status.textContent='Hakuna kitabu chenye kiungo cha kusoma moja kwa moja kilichopatikana kwa utafutaji huu. Jaribu jina jingine au mada kwa Kiingereza.';
+   return;
+  }
+  status.className='msg success';status.textContent='Tumepata vitabu '+readable.length+' vyenye viungo vya kusoma au kuazima. Bonyeza “Fungua kitabu”.';
+  results.innerHTML=readable.slice(0,15).map(book=>{
    const title=esc(book.title||'Kitabu bila jina'),authors=esc((book.author_name||['Mwandishi hajatajwa']).slice(0,3).join(', '));
    const year=book.first_publish_year?' · '+esc(book.first_publish_year):'';
    const cover=book.cover_i?'https://covers.openlibrary.org/b/id/'+encodeURIComponent(book.cover_i)+'-M.jpg':'';
-   const link='https://openlibrary.org'+(book.key||'');
-   return '<article class="item" style="display:flex;gap:14px;align-items:flex-start">'+(cover?'<img src="'+cover+'" alt="Jalada la '+title+'" loading="lazy" style="width:76px;max-height:112px;object-fit:cover;border-radius:6px">':'')+'<div style="min-width:0;flex:1"><h3>'+title+'</h3><p>'+authors+year+'</p><p mathe>'+esc(book.edition_count||1)+' toleo/ma toleo</p><a href="'+link+'" target="_blank" rel="noopener noreferrer">Fungua taarifa / angalia usomaji kwenye Open Library</a></div></article>';
+   const ia=book.ia[0],link='https://archive.org/details/'+encodeURIComponent(ia);
+   const isPublic=book.ebook_access==='public';
+   const action=isPublic?'Soma kitabu mtandaoni':'Fungua kitabu / omba kuazima';
+   const note=isPublic?'Kitabu kinaonekana kuwa wazi kusomwa.':'Kitabu kinaweza kuhitaji akaunti na kuazimwa bure; upatikanaji hutegemea masharti ya maktaba.';
+   return '<article class="item" style="display:flex;gap:14px;align-items:flex-start">'+(cover?'<img src="'+cover+'" alt="Jalada la '+title+'" loading="lazy" style="width:76px;max-height:112px;object-fit:cover;border-radius:6px">':'')+'<div style="min-width:0;flex:1"><h3>'+title+'</h3><p>'+authors+year+'</p><p>'+esc(note)+'</p><a href="'+link+'" target="_blank" rel="noopener noreferrer"><strong>📖 '+action+'</strong></a></div></article>';
   }).join('');
  }catch(error){status.className='msg error';status.textContent='Imeshindikana kutafuta kwa sasa. Hakikisha intaneti ipo kisha jaribu tena. '+error.message;}
  finally{btn.disabled=false;btn.textContent='Tafuta vitabu';}
