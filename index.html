@@ -157,6 +157,8 @@ async function searchOnlineBooks(){
 document.addEventListener('DOMContentLoaded',()=>{
  const b=$('asktutor');if(b)b.addEventListener('click',tutorReply);
  const sb=$('searchbooks');if(sb)sb.addEventListener('click',searchOnlineBooks);
+ const st=$('searchtie');if(st)st.addEventListener('click',searchTIE);
+ const ti=$('tiequery');if(ti)ti.addEventListener('keydown',e=>{if(e.key==='Enter')searchTIE();});
  const input=$('bookquery');if(input)input.addEventListener('keydown',e=>{if(e.key==='Enter')searchOnlineBooks();});
 });
 async function refreshSession(){const {data}=await db.auth.getSession();currentUser=data.session?.user||null;await updateAccount();await loadResources()}
