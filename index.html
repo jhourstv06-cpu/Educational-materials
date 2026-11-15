@@ -68,8 +68,9 @@ small{color:#617184}@media(max-width:650px){.controls{grid-template-columns:1fr}
 <p>Andika jina la kitabu, mada au mwandishi. Chagua kutafuta vitabu, PDF au makala. Viungo vya PDF na makala vitafungua matokeo ya utafutaji wa wavuti; hakikisha chanzo kinaaminika na kina ruhusa ya kusoma au kupakua.</p>
 <div class="row">
 <label style="flex:1">Jina la kitabu, mwandishi au mada
-<input id="bookquery" type="search" placeholder="Mfano: Biology, Qur'an, Shakespeare"></label>
+<input id="bookquery" type="search" placeholder="Mfano: Biology Form One, Hisabati Darasa la Saba, Kiswahili Form Two"></label>
 <button id="searchbooks" type="button">Tafuta vitabu</button>
+<button class="secondary" id="searchtiebooks" type="button">Tafuta vitabu vya Tanzania (TIE)</button>
 <div class="row" style="flex-wrap:wrap;margin-top:8px">
 <button class="secondary" id="searchpdf" type="button">Tafuta PDF</button>
 <button class="secondary" id="searcharticles" type="button">Tafuta makala</button>
@@ -140,6 +141,15 @@ function tutorReply(){
  out.classList.remove('hidden');out.className='msg';out.style.whiteSpace='pre-line';out.textContent=answer;
 }
 
+function searchTanzaniaBooks(){
+ const q=$('bookquery').value.trim();
+ if(!q){$('bookstatus').className='msg error';$('bookstatus').textContent='Andika somo, mada, darasa au kidato kwanza.';$('bookquery').focus();return;}
+ const terms=q+' Tanzania TIE textbook';
+ const url='https://www.google.com/search?q='+encodeURIComponent('site:ol.tie.go.tz '+terms);
+ window.open(url,'_blank','noopener');
+ $('bookstatus').className='msg';
+ $('bookstatus').textContent='Tumefungua utafutaji wa vitabu vya TIE. Tafuta matokeo yenye anuani ol.tie.go.tz ili ufungue kitabu rasmi.';
+}
 function searchDocumentType(type){
  const q=$('bookquery').value.trim();
  if(!q){$('bookstatus').className='msg error';$('bookstatus').textContent='Andika jina la kitabu au mada kwanza.';$('bookquery').focus();return;}
@@ -208,6 +218,7 @@ async function searchOnlineBooks(){
 document.addEventListener('DOMContentLoaded',()=>{
  const b=$('asktutor');if(b)b.addEventListener('click',tutorReply);
  const sb=$('searchbooks');if(sb)sb.addEventListener('click',searchOnlineBooks);
+ const stb=$('searchtiebooks');if(stb)stb.addEventListener('click',searchTanzaniaBooks);
  const sp=$('searchpdf');if(sp)sp.addEventListener('click',()=>searchDocumentType('pdf'));
  const sa=$('searcharticles');if(sa)sa.addEventListener('click',()=>searchDocumentType('articles'));
  const st=$('searchtie');if(st)st.addEventListener('click',searchTIE);
