@@ -65,11 +65,15 @@ small{color:#617184}@media(max-width:650px){.controls{grid-template-columns:1fr}
 
 <section class="panel" id="booksearch">
 <h2>🔎 Mfumo wa Kutafuta Vitabu Mtandaoni</h2>
-<p>Tafuta vitabu kwa jina, mwandishi au mada. Mfumo huu hutafuta kwenye Google Books na Open Library, kisha unaonyesha viungo vya taarifa, kusoma/kuona sampuli au kuazima pale vinapopatikana. Unaweza pia kufungua matokeo mapana ya Google Search.</p>
+<p>Andika jina la kitabu, mada au mwandishi. Chagua kutafuta vitabu, PDF au makala. Viungo vya PDF na makala vitafungua matokeo ya utafutaji wa wavuti; hakikisha chanzo kinaaminika na kina ruhusa ya kusoma au kupakua.</p>
 <div class="row">
 <label style="flex:1">Jina la kitabu, mwandishi au mada
 <input id="bookquery" type="search" placeholder="Mfano: Biology, Qur'an, Shakespeare"></label>
 <button id="searchbooks" type="button">Tafuta vitabu</button>
+<div class="row" style="flex-wrap:wrap;margin-top:8px">
+<button class="secondary" id="searchpdf" type="button">Tafuta PDF</button>
+<button class="secondary" id="searcharticles" type="button">Tafuta makala</button>
+</div>
 </div>
 <div id="bookstatus" class="msg" aria-live="polite">Andika jina la kitabu au mada kisha bonyeza Tafuta vitabu.</div>
 <div id="bookresults" aria-live="polite"></div>
@@ -136,6 +140,17 @@ function tutorReply(){
  out.classList.remove('hidden');out.className='msg';out.style.whiteSpace='pre-line';out.textContent=answer;
 }
 
+function searchDocumentType(type){
+ const q=$('bookquery').value.trim();
+ if(!q){$('bookstatus').className='msg error';$('bookstatus').textContent='Andika jina la kitabu au mada kwanza.';$('bookquery').focus();return;}
+ let query='';
+ if(type==='pdf') query=q+' filetype:pdf';
+ else query=q+' (makala OR article OR journal OR research paper)';
+ const url='https://www.google.com/search?q='+encodeURIComponent(query);
+ window.open(url,'_blank','noopener');
+ $('bookstatus').className='msg';
+ $('bookstatus').textContent=type==='pdf'?'Utafutaji wa nyaraka za PDF umefunguliwa kwenye Google.':'Utafutaji wa makala na tafiti umefunguliwa kwenye Google.';
+}
 function searchTIE(){
  const q=$('tiequery').value.trim();
  if(!q){$('tiequery').focus();return;}
@@ -193,6 +208,8 @@ async function searchOnlineBooks(){
 document.addEventListener('DOMContentLoaded',()=>{
  const b=$('asktutor');if(b)b.addEventListener('click',tutorReply);
  const sb=$('searchbooks');if(sb)sb.addEventListener('click',searchOnlineBooks);
+ const sp=$('searchpdf');if(sp)sp.addEventListener('click',()=>searchDocumentType('pdf'));
+ const sa=$('searcharticles');if(sa)sa.addEventListener('click',()=>searchDocumentType('articles'));
  const st=$('searchtie');if(st)st.addEventListener('click',searchTIE);
  const ti=$('tiequery');if(ti)ti.addEventListener('keydown',e=>{if(e.key==='Enter')searchTIE();});
  const input=$('bookquery');if(input)input.addEventListener('keydown',e=>{if(e.key==='Enter')searchOnlineBooks();});
