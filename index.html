@@ -67,7 +67,7 @@ small{color:#617184}@media(max-width:650px){.controls{grid-template-columns:1fr}
 <section class="panel hidden" id="payment"><h2>Wasilisha malipo</h2><div class="notice"><b>Bei:</b> TSh 1,000 kwa nyenzo ya kulipia<br><b>Tigo Pesa:</b> 0773614026<br>Baada ya kutuma pesa, weka kumbukumbu ya muamala. Msimamizi atakagua kabla ya ruhusa ya kupakua.</div>
 <form id="payform"><label>Nyenzo<input id="paytitle" readonly required placeholder="Chagua nyenzo ya kulipia"></label><input id="payid" type="hidden"><label>Jina la mtumaji<input id="payer" required></label><label>Namba ya simu<input id="payphone" required></label><label>Namba ya muamala<input id="reference" required></label><label>Maelezo (si lazima)<textarea id="notes"></textarea></label><button>Tuma ombi la uthibitisho</button></form><div id="paymsg" aria-live="polite"></div></section>
 
-<section class="panel hidden" id="admin"><h2>Dashibodi ya msimamizi</h2><div class="tabs"><button id="showupload">Ongeza kitabu/mtihani</button><button class="secondary" id="showpayments">Maombi ya malipo</button></div>
+<section class="panel hidden" id="admin"><h2>Dashibodi ya msimamizi</h2><div class="tabs"><button id="showupload">Ongeza kitabu/mtihani</button><button class="secondary" id="showusers">👥 Wanachama</button><button class="secondary" id="showresources">📚 Simamia vitabu</button><button class="secondary" id="showpayments">Maombi ya malipo</button></div>
 <form id="resourceform"><label>Jina la nyenzo<input id="rtitle" required></label><div class="row"><label>Sehemu/Aina ya nyenzo<select id="rkind"><option>Kitabu</option><option>Mtihani</option><option>Nyenzo nyingine</option><option>Kitabu cha Dini ya Kiislamu</option><option>Tafsiri ya Qur’ani</option><option>Ndoa</option><option>Mirathi</option><option>Kuoga Janaba</option><option>Ripoti za Mitihani ya Miaka Iliyopita</option></select></label><label>Somo<select id="rsubject" required><option value="">Masomo yote</option><optgroup label="Msingi"><option>Kiswahili</option><option>English</option><option>Hisabati</option><option>Sayansi</option><option>Maarifa ya Jamii</option><option>Stadi za Kazi</option><option>Elimu ya Dini ya Kiislamu</option><option>Maarifa ya Dini ya Kiislamu</option></optgroup><optgroup label="Sekondari"><option>Basic Mathematics</option><option>Mathematics</option><option>Biology</option><option>Chemistry</option><option>Physics</option><option>Geography</option><option>History</option><option>Civics</option><option>English Language</option><option>Kiswahili</option><option>Commerce</option><option>Bookkeeping</option><option>Computer Studies</option><option>Agriculture</option><option>Literature in English</option><option>French</option><option>Arabic</option><option>Islamic Religious Knowledge</option><option>Fine Art</option><option>Food and Nutrition</option><option>Physical Education</option></optgroup></select></label></div><div class="row"><label>Darasa/kidato (kwa nyenzo za shule tu)<select id="rlevel"><option value="">Chagua darasa/kidato</option><optgroup label="Shule ya Msingi"><option>Darasa la Kwanza</option><option>Darasa la Pili</option><option>Darasa la Tatu</option><option>Darasa la Nne</option><option>Darasa la Tano</option><option>Darasa la Sita</option><option>Darasa la Saba</option></optgroup><optgroup label="O-Level"><option>Form One</option><option>Form Two</option><option>Form Three</option><option>Form Four</option></optgroup><optgroup label="A-Level"><option>Form Five</option><option>Form Six</option></optgroup></select></label><label>Mwaka<input id="ryear" type="number" min="1900" max="2100"></label></div><label>Maelezo<textarea id="rdesc"></textarea></label><label>PDF<input id="rfile" type="file" accept="application/pdf" required></label><small id="pdfinfo">PDF itajaribiwa kuandaliwa kabla ya kupakiwa. Ikiwa huduma hiyo haipatikani, PDF ya asili itapakiwa.</small><label><input id="rpaid" type="checkbox" style="width:auto"> Nyenzo ya kulipia (TSh 1,000)</label><label><input id="rpublished" type="checkbox" checked style="width:auto"> Chapisha mara moja</label><button>Hifadhi nyenzo</button></form>
 <div id="adminlist" class="hidden"></div><div id="adminmsg" aria-live="polite"></div></section>
 
@@ -269,8 +269,37 @@ $('payform').onsubmit=async e=>{e.preventDefault();clearMsg('paymsg');if(!curren
  if(!payload.resource_id){message('paymsg','Chagua nyenzo ya kulipia kwanza.',true);return}
  const {error}=await db.from('payment_submissions').insert(payload);if(error)message('paymsg','Ombi halijatumwa: '+error.message,true);else{message('paymsg','Ombi limetumwa. Hali yake ni PENDING hadi msimamizi athibitishe muamala.');e.target.reset();$('payid').value='';$('paytitle').value='';}
 };
+function showAdminPanel(){ $('resourceform').classList.add('hidden'); $('adminlist').classList.remove('hidden'); }
 $('showupload').onclick=()=>{$('resourceform').classList.remove('hidden');$('adminlist').classList.add('hidden')};
+$('showusers').onclick=loadAdminUsers;
+$('showresources').onclick=loadAdminResources;
 $('showpayments').onclick=loadPayments;
+
+async function loadAdminUsers(){
+ if(!isAdmin)return;showAdminPanel();$('adminlist').innerHTML='Inapakia taarifa za waliojiunga...';
+ const {data,error,count}=await db.from('profiles').select('id,full_name,created_at',{count:'exact'}).order('created_at',{ascending:false});
+ if(error){$('adminlist').textContent='Imeshindikana kupata wanachama: '+error.message;return;}
+ const today=new Date();today.setHours(0,0,0,0);
+ const joinedToday=(data||[]).filter(p=>p.created_at&&new Date(p.created_at)>=today).length;
+ const total=Number(count??data?.length??0);
+ $('adminlist').innerHTML='<div class="grid"><article class="item"><span class="pill">Jumla ya waliojiunga</span><h2>'+total.toLocaleString('en-US')+'</h2></article><article class="item"><span class="pill">Waliojiunga leo</span><h2>'+joinedToday.toLocaleString('en-US')+'</h2></article></div><h3>Orodha ya wanachama</h3>'+(data?.length?data.map((p,i)=>'<article class="item"><b>'+(i+1)+'. '+esc(p.full_name||'Jina halijawekwa')+'</b><small>Tarehe ya kujiunga: '+(p.created_at?new Date(p.created_at).toLocaleString('sw-TZ'):'Haijulikani')+'</small></article>').join(''):'Hakuna wanachama waliopatikana.');
+}
+
+async function loadAdminResources(){
+ if(!isAdmin)return;showAdminPanel();$('adminlist').innerHTML='Inapakia vitabu...';
+ const {data,error}=await db.from('resources').select('id,title,kind,published,is_paid,created_at').order('created_at',{ascending:false});
+ if(error){$('adminlist').textContent='Imeshindikana kupata vitabu: '+error.message;return;}
+ $('adminlist').innerHTML=data?.length?data.map(x=>'<article class="item"><b>'+esc(x.title)+'</b><small>'+esc(x.kind||'Nyenzo')+' · '+(x.is_paid?'Cha malipo':'Bure')+' · '+(x.published?'Kimechapishwa':'Kimezimwa')+'</small><button class="'+(x.published?'danger':'')+'" data-toggle-resource="'+x.id+'" data-next="'+(!x.published)+'">'+(x.published?'Zima kitabu':'Washa kitabu')+'</button></article>').join(''):'Hakuna vitabu vilivyohifadhiwa.';
+ document.querySelectorAll('[data-toggle-resource]').forEach(b=>b.onclick=()=>toggleResource(b.dataset.toggleResource,b.dataset.next==='true'));
+}
+
+async function toggleResource(id,published){
+ if(!isAdmin)return;
+ const {error}=await db.from('resources').update({published}).eq('id',id);
+ if(error){message('adminmsg','Imeshindikana kubadilisha hali ya kitabu: '+error.message,true);return;}
+ message('adminmsg',published?'Kitabu kimewashwa na kitaonekana kwa wanafunzi.':'Kitabu kimezimwa; hakitaonekana kwa wanafunzi wapya.');
+ await loadAdminResources();await loadResources();
+}
 async function optimizePDF(file){try{if(!window.PDFLib){await new Promise((resolve,reject)=>{const s=document.createElement('script');s.src='https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js';s.onload=resolve;s.onerror=()=>reject(new Error('Maktaba haikupatikana'));document.head.appendChild(s);});}if(!window.PDFLib)return file;const bytes=await file.arrayBuffer();const doc=await window.PDFLib.PDFDocument.load(bytes);const out=await doc.save({useObjectStreams:true,addDefaultPage:false});return new File([out],file.name,{type:'application/pdf'});}catch(err){console.warn('PDF optimization skipped:',err);return file;}}
 $('resourceform').onsubmit=async e=>{e.preventDefault();clearMsg('adminmsg');if(!isAdmin){message('adminmsg','Huna ruhusa ya msimamizi.',true);return}const original=$('rfile').files[0];if(!original||original.type!=='application/pdf'){message('adminmsg','Chagua faili la PDF.',true);return}
  const submit=e.target.querySelector('button[type="submit"]')||e.target.querySelector('button:last-child');submit.disabled=true;submit.textContent='Inaandaa PDF...';let f;try{f=await optimizePDF(original)}catch(err){submit.disabled=false;submit.textContent='Hifadhi nyenzo';message('adminmsg','PDF haikuweza kuandaliwa: '+err.message+'. Faili la asili halijapakiwa.',true);return}const before=(original.size/1048576).toFixed(2),after=(f.size/1048576).toFixed(2);$('pdfinfo').textContent='Ukubwa wa awali: '+before+' MB · baada ya maandalizi: '+after+' MB';
