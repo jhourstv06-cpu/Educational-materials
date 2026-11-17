@@ -33,7 +33,7 @@ form{display:grid;gap:10px;max-width:650px}label{font-weight:650;display:grid;ga
 footer{text-align:center;padding:25px;color:#617184}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.tabs button{width:auto}
 small{color:#617184}
 .header-top{display:flex;align-items:center;gap:14px}.menu-toggle{width:44px;height:44px;padding:0;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);font-size:1.5rem}
-.app-layout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:18px;align-items:start}.sidebar{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;position:sticky;top:14px;min-height:calc(100vh - 28px);z-index:20}.sidebar-toggle{display:block;margin:0 0 8px auto;background:#123d63;color:#fff}.sidebar-title{font-size:.78rem;font-weight:800;letter-spacing:.08em;color:#718096;padding:8px 10px 14px}.nav-item{display:block;text-align:left;width:100%;background:transparent;color:#34465a;padding:12px 11px;margin:3px 0;border-radius:9px;font-weight:650}.nav-item:hover,.nav-item.active{background:#e5edf5;color:#123d63}.admin-nav{margin-top:14px;border-top:1px solid var(--line);border-radius:0 0 9px 9px;padding-top:16px}.app-main{min-width:0}.page-section.hidden{display:none!important}.page-section{display:block;min-width:0}.sidebar-backdrop{display:none}
+.app-layout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:18px;align-items:start}.sidebar{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;position:sticky;top:14px;min-height:calc(100vh - 28px);z-index:20}.app-menu-bar{display:flex;justify-content:flex-start;margin:0 0 10px}.app-menu-bar .menu-toggle{background:#123d63;color:#fff;border:1px solid #123d63}.sidebar-title{font-size:.78rem;font-weight:800;letter-spacing:.08em;color:#718096;padding:8px 10px 14px}.nav-item{display:block;text-align:left;width:100%;background:transparent;color:#34465a;padding:12px 11px;margin:3px 0;border-radius:9px;font-weight:650}.nav-item:hover,.nav-item.active{background:#e5edf5;color:#123d63}.admin-nav{margin-top:14px;border-top:1px solid var(--line);border-radius:0 0 9px 9px;padding-top:16px}.app-main{min-width:0}.page-section.hidden{display:none!important}.page-section{display:block;min-width:0}.sidebar-backdrop{display:none}
 @media(max-width:760px){main{padding:14px 12px}.app-layout{display:block}.sidebar{position:fixed;left:0;top:0;bottom:0;width:min(82vw,310px);min-height:0;height:100dvh;border-radius:0 14px 14px 0;overflow:auto;transform:translateX(-105%);transition:transform .22s ease;z-index:100;padding:18px 14px}.sidebar.open{transform:translateX(0)}.sidebar-backdrop.show{display:block;position:fixed;inset:0;background:rgba(10,25,40,.42);z-index:90}.app-main{width:100%}.controls{grid-template-columns:1fr}.row{display:grid}}
 
 </style></head><body>
@@ -46,9 +46,10 @@ small{color:#617184}
 
 
 <div id="appcontent" class="hidden">
+<div class="app-menu-bar"><button id="menuToggle" class="menu-toggle" type="button" aria-label="Fungua menyu" aria-expanded="false">☰</button></div>
 <div class="app-layout">
 <aside id="sidebar" class="sidebar" aria-label="Menyu kuu">
-<button id="menuToggle" class="menu-toggle sidebar-toggle" type="button" aria-label="Funga menyu" aria-expanded="true">☰</button><div class="sidebar-title">MENYU KUU</div>
+<div class="sidebar-title">MENYU KUU</div>
 <button class="nav-item active" data-target="dashboard" type="button">🏠 Dashboard</button>
 <button class="nav-item" data-target="catalog" data-kind="" type="button">📚 Nyenzo za Shule</button>
 <button class="nav-item" data-target="catalog" data-kind="Kitabu cha Dini ya Kiislamu" type="button">🕌 Maktaba ya Kiislamu</button>
@@ -125,8 +126,8 @@ const SUPABASE_ANON_KEY="sb_publishable_J1AM62cW0PGvyGzcPrC0yA_nwHQYIzY";
 const db=window.supabase?.createClient ? window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY) : null;
 let currentUser=null,isAdmin=false,resources=[];
 const $=id=>document.getElementById(id);
-function closeSidebar(){ $('sidebar')?.classList.remove('open');$('sidebarBackdrop')?.classList.remove('show');$('menuToggle')?.setAttribute('aria-expanded','false');}
-function toggleSidebar(){const sidebar=$('sidebar');if(!sidebar)return;const open=!sidebar.classList.contains('open');sidebar.classList.toggle('open',open);$('sidebarBackdrop')?.classList.toggle('show',open);$('menuToggle')?.setAttribute('aria-expanded',String(open));}
+function closeSidebar(){ $('sidebar')?.classList.remove('open');$('sidebarBackdrop')?.classList.remove('show');$('menuToggle')?.setAttribute('aria-expanded','false');$('menuToggle')?.setAttribute('aria-label','Fungua menyu');}
+function toggleSidebar(){const sidebar=$('sidebar');if(!sidebar)return;const open=!sidebar.classList.contains('open');sidebar.classList.toggle('open',open);$('sidebarBackdrop')?.classList.toggle('show',open);$('menuToggle')?.setAttribute('aria-expanded',String(open));$('menuToggle')?.setAttribute('aria-label',open?'Funga menyu':'Fungua menyu');}
 $('menuToggle')?.addEventListener('click',toggleSidebar);
 $('sidebarBackdrop')?.addEventListener('click',closeSidebar);
 function showPage(page,kindValue){
