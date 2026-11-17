@@ -14,7 +14,7 @@ create table if not exists public.resources (
   id uuid primary key default gen_random_uuid(),
   title text not null,
   description text,
-  kind text not null check (kind in ('Kitabu','Mtihani','Nyenzo nyingine')),
+  kind text not null check (kind in ('Kitabu','Mtihani','Nyenzo nyingine','Kitabu cha Dini ya Kiislamu','Tafsiri ya Qur’ani','Ndoa','Mirathi','Kuoga Janaba','Ripoti za Mitihani ya Miaka Iliyopita')),
   subject text,
   level text,
   year integer,
