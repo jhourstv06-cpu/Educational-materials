@@ -41,6 +41,29 @@ small{color:#617184}@media(max-width:650px){.controls{grid-template-columns:1fr}
 
 <div id="appcontent" class="hidden">
 
+
+
+<section class="panel" id="educationcalendar">
+<h2>📅 Kalenda ya Elimu</h2>
+<p>Kalenda inaonyesha tarehe zilizothibitishwa kutoka kwenye vyanzo rasmi. Chagua eneo na mwaka kuona ratiba.</p>
+<div class="row"><label>Eneo<select id="calendarregion"><option value="bara">Tanzania Bara</option><option value="zanzibar">Zanzibar</option></select></label><label>Mwaka<select id="calendaryear"><option value="2026">2026</option><option value="2027">2027</option></select></label></div>
+<div id="calendarstatus" class="msg" aria-live="polite"></div><div id="calendarevents" class="grid"></div>
+<small>Ratiba inaweza kubadilishwa na mamlaka husika. Tarehe zisizothibitishwa hazitaonyeshwa kama rasmi.</small>
+</section>
+
+<section class="hero"><h1>Karibu kwenye maktaba ya elimu</h1><p>Tafuta nyenzo za shule, vitabu vya dini ya Kiislamu na ripoti za mitihani ya miaka iliyopita.</p>
+<div class="controls"><input id="q" placeholder="Tafuta jina, somo au mwaka"><select id="kind"><option value="">Sehemu zote</option><option>Kitabu</option><option>Mtihani</option><option>Nyenzo nyingine</option><option>Kitabu cha Dini ya Kiislamu</option><option>Tafsiri ya Qur’ani</option><option>Ndoa</option><option>Mirathi</option><option>Kuoga Janaba</option><option>Ripoti za Mitihani ya Miaka Iliyopita</option></select><select id="level"><option value="">Madarasa na vidato vyote</option><optgroup label="Shule ya Msingi"><option>Darasa la Kwanza</option><option>Darasa la Pili</option><option>Darasa la Tatu</option><option>Darasa la Nne</option><option>Darasa la Tano</option><option>Darasa la Sita</option><option>Darasa la Saba</option></optgroup><optgroup label="O-Level"><option>Form One</option><option>Form Two</option><option>Form Three</option><option>Form Four</option></optgroup><optgroup label="A-Level"><option>Form Five</option><option>Form Six</option></optgroup></select><select id="subjectfilter"><option value="">Masomo yote</option><optgroup label="Msingi"><option>Kiswahili</option><option>English</option><option>Hisabati</option><option>Sayansi</option><option>Maarifa ya Jamii</option><option>Stadi za Kazi</option><option>Maarifa ya Dini ya Kiislamu</option></optgroup><optgroup label="Sekondari"><option>Basic Mathematics</option><option>Mathematics</option><option>Biology</option><option>Chemistry</option><option>Physics</option><option>Geography</option><option>History</option><option>Civics</option><option>English Language</option><option>Kiswahili</option><option>Commerce</option><option>Bookkeeping</option><option>Computer Studies</option><option>Agriculture</option><option>Literature in English</option><option>French</option><option>Arabic</option><option>Islamic Religious Knowledge</option><option>Fine Art</option><option>Food and Nutrition</option><option>Physical Education</option></optgroup></select></div></section>
+
+<h2>Nyenzo zilizochapishwa</h2><section id="catalog" class="grid"><div class="item">Inapakia maktaba...</div></section>
+
+<section class="panel" id="educationcalendar">
+<h2>📅 Kalenda ya Elimu</h2>
+<p>Kalenda inaonyesha tarehe zilizothibitishwa kutoka kwenye vyanzo rasmi. Chagua eneo na mwaka kuona ratiba.</p>
+<div class="row"><label>Eneo<select id="calendarregion"><option value="bara">Tanzania Bara</option><option value="zanzibar">Zanzibar</option></select></label><label>Mwaka<select id="calendaryear"><option value="2026">2026</option><option value="2027">2027</option></select></label></div>
+<div id="calendarstatus" class="msg" aria-live="polite"></div><div id="calendarevents" class="grid"></div>
+<small>Ratiba inaweza kubadilishwa na mamlaka husika. Tarehe zisizothibitishwa hazitaonyeshwa kama rasmi.</small>
+</section>
+
 <section class="panel" id="booksearch">
 <h2>🔎 Mfumo wa Kutafuta Vitabu Mtandaoni</h2>
 <p>Andika jina la kitabu, mada au mwandishi. Chagua kutafuta vitabu, PDF au makala. Viungo vya PDF na makala vitafungua matokeo ya utafutaji wa wavuti; hakikisha chanzo kinaaminika na kina ruhusa ya kusoma au kupakua.</p>
@@ -58,25 +81,6 @@ small{color:#617184}@media(max-width:650px){.controls{grid-template-columns:1fr}
 <div id="bookresults" aria-live="polite"></div>
 <small>Matokeo yanaweza kuwa na vitabu vya kusoma mtandaoni, vya kuazima au taarifa za kitabu pekee. Tumia viungo vya watoa huduma na heshimu hakimiliki.</small>
 </section>
-
-<section class="panel" id="educationcalendar">
-<h2>📅 Kalenda ya Elimu</h2>
-<p>Chagua eneo na mwaka kuona matukio ya shule. Matukio rasmi yatachapishwa baada ya kuthibitishwa kutoka kwenye waraka wa mamlaka husika.</p>
-<div class="row"><label>Eneo<select id="calendarregion"><option value="zanzibar">Zanzibar</option><option value="bara">Tanzania Bara</option></select></label><label>Mwaka<select id="calendaryear"><option value="2026">2026</option><option value="2027">2027</option></select></label></div>
-<div id="calendarstatus" class="msg" aria-live="polite">Inapakia kalenda...</div><div id="calendarevents" class="grid"></div>
-<form id="calendareventform" class="hidden"><h3>Ongeza tukio la kalenda</h3>
-<label>Eneo la tukio<select id="eventregion"><option value="zanzibar">Zanzibar</option><option value="bara">Tanzania Bara</option></select></label>
-<label>Jina la tukio<input id="eventtitle" required placeholder="Mfano: Kufungua shule"></label>
-<div class="row"><label>Tarehe ya kuanza<input id="eventstart" type="date" required></label><label>Tarehe ya mwisho (si lazima)<input id="eventend" type="date"></label></div>
-<label>Aina ya tukio<select id="eventtype"><option>Muhula wa shule</option><option>Likizo</option><option>Mtihani</option><option>Tathmini</option><option>Tukio la kitaaluma</option><option>Likizo ya kitaifa</option><option>Nyingine</option></select></label>
-<label>Chanzo / kiungo cha waraka rasmi<input id="eventsource" type="url" placeholder="https://..."></label>
-<label>Maelezo<textarea id="eventdescription" rows="2"></textarea></label><button type="submit">Hifadhi tukio</button></form>
-</section>
-
-<section class="hero"><h1>Karibu kwenye maktaba ya elimu</h1><p>Tafuta nyenzo za shule, vitabu vya dini ya Kiislamu na ripoti za mitihani ya miaka iliyopita.</p>
-<div class="controls"><input id="q" placeholder="Tafuta jina, somo au mwaka"><select id="kind"><option value="">Sehemu zote</option><option>Kitabu</option><option>Mtihani</option><option>Nyenzo nyingine</option><option>Kitabu cha Dini ya Kiislamu</option><option>Tafsiri ya Qur’ani</option><option>Ndoa</option><option>Mirathi</option><option>Kuoga Janaba</option><option>Ripoti za Mitihani ya Miaka Iliyopita</option></select><select id="level"><option value="">Madarasa na vidato vyote</option><optgroup label="Shule ya Msingi"><option>Darasa la Kwanza</option><option>Darasa la Pili</option><option>Darasa la Tatu</option><option>Darasa la Nne</option><option>Darasa la Tano</option><option>Darasa la Sita</option><option>Darasa la Saba</option></optgroup><optgroup label="O-Level"><option>Form One</option><option>Form Two</option><option>Form Three</option><option>Form Four</option></optgroup><optgroup label="A-Level"><option>Form Five</option><option>Form Six</option></optgroup></select><select id="subjectfilter"><option value="">Masomo yote</option><optgroup label="Msingi"><option>Kiswahili</option><option>English</option><option>Hisabati</option><option>Sayansi</option><option>Maarifa ya Jamii</option><option>Stadi za Kazi</option><option>Maarifa ya Dini ya Kiislamu</option></optgroup><optgroup label="Sekondari"><option>Basic Mathematics</option><option>Mathematics</option><option>Biology</option><option>Chemistry</option><option>Physics</option><option>Geography</option><option>History</option><option>Civics</option><option>English Language</option><option>Kiswahili</option><option>Commerce</option><option>Bookkeeping</option><option>Computer Studies</option><option>Agriculture</option><option>Literature in English</option><option>French</option><option>Arabic</option><option>Islamic Religious Knowledge</option><option>Fine Art</option><option>Food and Nutrition</option><option>Physical Education</option></optgroup></select></div></section>
-
-<h2>Nyenzo zilizochapishwa</h2><section id="catalog" class="grid"><div class="item">Inapakia maktaba...</div></section>
 
 <section class="panel hidden" id="payment"><h2>Wasilisha malipo</h2><div class="notice"><b>Bei:</b> TSh 1,000 kwa nyenzo ya kulipia<br><b>Tigo Pesa:</b> 0773614026<br>Baada ya kutuma pesa, weka kumbukumbu ya muamala. Msimamizi atakagua kabla ya ruhusa ya kupakua.</div>
 <form id="payform"><label>Nyenzo<input id="paytitle" readonly required placeholder="Chagua nyenzo ya kulipia"></label><input id="payid" type="hidden"><label>Jina la mtumaji<input id="payer" required></label><label>Namba ya simu<input id="payphone" required></label><label>Namba ya muamala<input id="reference" required></label><label>Maelezo (si lazima)<textarea id="notes"></textarea></label><button>Tuma ombi la uthibitisho</button></form><div id="paymsg" aria-live="polite"></div></section>
@@ -235,25 +239,44 @@ document.addEventListener('DOMContentLoaded',()=>{
  const input=$('bookquery');if(input)input.addEventListener('keydown',e=>{if(e.key==='Enter')searchOnlineBooks();});
 });
 
-async function loadEducationCalendar(){
- const region=$('calendarregion').value,year=Number($('calendaryear').value);
- $('calendarstatus').className='msg';$('calendarstatus').textContent='Inapakia matukio...';$('calendarevents').innerHTML='';
- const {data,error}=await db.from('calendar_events').select('*').eq('region',region).gte('event_date',year+'-01-01').lte('event_date',year+'-12-31').order('event_date',{ascending:true});
- if(error){$('calendarstatus').className='msg error';$('calendarstatus').textContent='Kalenda bado haijaunganishwa. Inahitajika kuunda jedwali calendar_events kwenye Supabase kwa SQL ya maelekezo.';return;}
- if(!data||!data.length){$('calendarstatus').textContent=region==='zanzibar'?'Hakuna ratiba rasmi iliyothibitishwa iliyowekwa kwa mwaka huu. Matukio yataongezwa baada ya kupata waraka wa Wizara ya Elimu Zanzibar.':'Hakuna matukio yaliyowekwa kwa mwaka huu. Matukio rasmi yataongezwa baada ya kuthibitishwa.';return;}
- $('calendarstatus').className='msg success';$('calendarstatus').textContent='Matukio '+data.length+' · '+(region==='zanzibar'?'Zanzibar':'Tanzania Bara');
- $('calendarevents').innerHTML=data.map(e=>'<article class="item"><span class="pill">'+esc(e.event_type||'Tukio')+'</span><h3>'+esc(e.title)+'</h3><b>'+new Date(e.event_date+'T00:00:00').toLocaleDateString('sw-TZ',{day:'numeric',month:'long',year:'numeric'})+(e.end_date&&e.end_date!==e.event_date?' – '+new Date(e.end_date+'T00:00:00').toLocaleDateString('sw-TZ',{day:'numeric',month:'long',year:'numeric'}):'')+'</b><p>'+esc(e.description||'')+'</p>'+(e.source_url?'<a href="'+esc(e.source_url)+'" target="_blank" rel="noopener noreferrer">Fungua chanzo / waraka</a>':'<small>Chanzo rasmi hakijaambatanishwa</small>')+'</article>').join('');
+const educationCalendar={
+ bara:{
+  "2026":[
+   {title:"Kufungua Muhula wa Kwanza",date:"2026-01-13",type:"Kufungua shule",desc:"Shule za awali, msingi na sekondari (Kidato I–IV)."},
+   {title:"Kufunga kwa likizo fupi",date:"2026-03-27",type:"Likizo",desc:"Mwisho wa masomo kabla ya likizo fupi."},
+   {title:"Kurejea baada ya likizo fupi",date:"2026-04-08",type:"Kufungua shule",desc:"Masomo yanaendelea baada ya likizo fupi."},
+   {title:"Kufunga Muhula wa Kwanza",date:"2026-06-05",type:"Kufunga muhula",desc:"Tarehe iliyokuwa kwenye Waraka wa Elimu Na. 05 wa 2025."},
+   {title:"Kufungua Muhula wa Pili",date:"2026-07-06",type:"Kufungua shule",desc:"Kuanza kwa muhula wa pili."},
+   {title:"Kufunga kwa likizo fupi",date:"2026-09-04",type:"Likizo",desc:"Mwisho wa masomo kabla ya likizo fupi."},
+   {title:"Kurejea baada ya likizo fupi",date:"2026-09-14",type:"Kufungua shule",desc:"Masomo yanaendelea baada ya likizo fupi."},
+   {title:"Kufunga shule",date:"2026-11-13",type:"Kufunga shule",desc:"Tarehe ilibadilishwa kutoka 4 Desemba 2026 kupitia Waraka wa Elimu Na. 3 wa 2026."}
+  ],
+  "2027":[]
+ },
+ zanzibar:{"2026":[],"2027":[]}
+};
+function calendarDate(value){return new Date(value+"T00:00:00").toLocaleDateString('sw-TZ',{day:'numeric',month:'long',year:'numeric'});}
+function loadEducationCalendar(){
+ const region=$('calendarregion').value,year=$('calendaryear').value;
+ const events=educationCalendar[region]?.[year]||[];
+ $('calendarevents').innerHTML='';
+ if(!events.length){
+  $('calendarstatus').className='msg';
+  $('calendarstatus').textContent=region==='zanzibar'
+   ?'Bado hakuna tarehe rasmi zilizochapishwa/kuhakikishwa na Wizara ya Elimu Zanzibar kwa mwaka huu. Tutaziongeza zikithibitishwa.'
+   :'Bado hakuna kalenda rasmi iliyothibitishwa kwa mwaka huu. Tafadhali fuatilia tangazo la Wizara ya Elimu.';
+  return;
+ }
+ $('calendarstatus').className='msg success';
+ $('calendarstatus').textContent=events.length+' matukio ya kalenda · '+(region==='bara'?'Tanzania Bara':'Zanzibar')+' · '+year;
+ $('calendarevents').innerHTML=events.map(e=>'<article class="item"><span class="pill">'+esc(e.type)+'</span><h3>'+esc(e.title)+'</h3><b>'+calendarDate(e.date)+'</b><p>'+esc(e.desc)+'</p></article>').join('');
+ if(region==='bara'&&year==='2026'){
+  $('calendarevents').innerHTML+='<article class="item"><h3>📄 Nyaraka rasmi</h3><p>Kalenda ya awali ya 2026 na marekebisho ya tarehe ya kufunga shule.</p><p><a href="https://www.moe.go.tz/sw/file/9087/download?token=bzs4Zud_" target="_blank" rel="noopener noreferrer">Waraka wa Elimu Na. 05 wa 2025</a></p><p><a href="https://www.moe.go.tz/en/public-notices/education-circular-no-3-of-the-year-2026-on-changes-to-the-school-closing-dates-for-pre-primary-primary-and-secondary-schools-in-tanzania-mainland" target="_blank" rel="noopener noreferrer">Waraka wa Elimu Na. 3 wa 2026 (marekebisho)</a></p></article>';
+ }
 }
-$('calendarregion').addEventListener('change',loadEducationCalendar);$('calendaryear').addEventListener('change',loadEducationCalendar);
-async function saveCalendarEvent(e){
- e.preventDefault();if(!isAdmin){message('calendarstatus','Huna ruhusa ya kuongeza tukio.',true);return;}
- const payload={region:$('eventregion').value,title:$('eventtitle').value.trim(),event_date:$('eventstart').value,end_date:$('eventend').value||null,event_type:$('eventtype').value,source_url:$('eventsource').value.trim()||null,description:$('eventdescription').value.trim(),created_by:currentUser.id};
- if(payload.end_date&&payload.end_date<payload.event_date){message('calendarstatus','Tarehe ya mwisho haiwezi kuwa kabla ya tarehe ya kuanza.',true);return;}
- const {error}=await db.from('calendar_events').insert(payload);if(error){message('calendarstatus','Tukio halijahifadhiwa: '+error.message,true);return;}
- message('calendarstatus','Tukio limehifadhiwa.');$('calendareventform').reset();$('calendarregion').value=payload.region;$('calendaryear').value=payload.event_date.slice(0,4);await loadEducationCalendar();
-}
-$('calendareventform').addEventListener('submit',saveCalendarEvent);
-async function refreshSession(){if(!db){message('authmsg','Huduma ya kuingia haijapakia. Angalia intaneti au jaribu tena baada ya kufungua ukurasa upya.',true);return}const {data}=await db.auth.getSession();currentUser=data.session?.user||null;await updateAccount();await loadResources();await loadEducationCalendar()}
+$('calendarregion').addEventListener('change',loadEducationCalendar);
+$('calendaryear').addEventListener('change',loadEducationCalendar);
+async function refreshSession(){if(!db){message('authmsg','Huduma ya kuingia haijapakia. Angalia intaneti au jaribu tena baada ya kufungua ukurasa upya.',true);return}const {data}=await db.auth.getSession();currentUser=data.session?.user||null;await updateAccount();await loadResources()}
 async function updateAccount(){
  $('signedout').classList.toggle('hidden',!!currentUser);$('signedin').classList.toggle('hidden',!currentUser);
  $('who').textContent=currentUser?'Umeingia: '+currentUser.email:'';isAdmin=false;
@@ -262,10 +285,11 @@ async function updateAccount(){
  $('appcontent').classList.toggle('hidden',!currentUser);
  $('payment').classList.add('hidden');
 }
-$('login').onclick=async()=>{clearMsg('authmsg');if(!db){message('authmsg','Huduma ya kuingia haijapakia. Angalia intaneti, kisha onyesha upya ukurasa.',true);return;}const email=$('email').value.trim(),password=$('password').value;if(!email||!password){message('authmsg','Jaza barua pepe na nenosiri kwanza.',true);return;}const btn=$('login');btn.disabled=true;btn.textContent='Inaingia...';message('authmsg','Inaunganisha na mfumo...',false);try{const {error}=await db.auth.signInWithPassword({email,password});if(error)message('authmsg','Imeshindikana kuingia: '+error.message,true);else{await refreshSession();message('authmsg','Umeingia kikamilifu.',false)}}catch(err){message('authmsg','Hitilafu ya muunganisho: '+(err?.message||'Jaribu tena.'),true)}finally{btn.disabled=false;btn.textContent='Ingia'}};
+$('login').onclick=async()=>{clearMsg('authmsg');if(!db){message('authmsg','Huduma ya kuingia haijapakia. Angalia intaneti, kisha onyesha upya ukurasa.',true);return;}const email=$('email').value.trim(),password=$('password').value;if(!email||!password){message('authmsg','Jaza barua pepe na nenosiri kwanza.',true);return;}const btn=$('login');btn.disabled=true;btn.textContent='Inaingia...';message('authmsg','Inaunganisha na mfumo...',false);try{const {error}=await db.auth.signInWithPassword({email,password});if(error)message('authmsg','Imeshindikana kuingia: '+error.message,true);else{await loadEducationCalendar();
+ refreshSession();message('authmsg','Umeingia kikamilifu.',false)}}catch(err){message('authmsg','Hitilafu ya muunganisho: '+(err?.message||'Jaribu tena.'),true)}finally{btn.disabled=false;btn.textContent='Ingia'}};
 $('signup').onclick=async()=>{clearMsg('authmsg');if(!db){message('authmsg','Huduma ya kuingia haijapakia. Angalia intaneti, kisha jaribu tena.',true);return;}try{const {data,error}=await db.auth.signUp({email:$('email').value.trim(),password:$('password').value,options:{emailRedirectTo:'https://jhourstv06-cpu.github.io/Educational-materials/'}});if(error)message('authmsg',error.message,true);else if(data.session){await refreshSession();message('authmsg','Akaunti imefunguliwa na umeingia.')}else message('authmsg','Akaunti imeundwa. Angalia barua pepe yako kuthibitisha usajili kabla ya kuingia.');}catch(err){message('authmsg','Hitilafu ya muunganisho: '+(err?.message||'Jaribu tena.'),true)}};
 $('logout').onclick=async()=>{await db.auth.signOut();currentUser=null;await updateAccount();await loadResources()};
-if(db)db.auth.onAuthStateChange((_event,session)=>{currentUser=session?.user||null;setTimeout(async()=>{await updateAccount();await loadResources();await loadEducationCalendar()},0)});
+if(db)db.auth.onAuthStateChange((_event,session)=>{currentUser=session?.user||null;setTimeout(async()=>{await updateAccount();await loadResources()},0)});
 async function loadResources(){
  if(!currentUser){
   resources=[];
