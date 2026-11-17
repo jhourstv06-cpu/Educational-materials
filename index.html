@@ -253,7 +253,7 @@ async function saveCalendarEvent(e){
  message('calendarstatus','Tukio limehifadhiwa.');$('calendareventform').reset();$('calendarregion').value=payload.region;$('calendaryear').value=payload.event_date.slice(0,4);await loadEducationCalendar();
 }
 $('calendareventform').addEventListener('submit',saveCalendarEvent);
-\nasync function refreshSession(){if(!db){message('authmsg','Huduma ya kuingia haijapakia. Angalia intaneti au jaribu tena baada ya kufungua ukurasa upya.',true);return}const {data}=await db.auth.getSession();currentUser=data.session?.user||null;await updateAccount();await loadResources();await loadEducationCalendar()}
+async function refreshSession(){if(!db){message('authmsg','Huduma ya kuingia haijapakia. Angalia intaneti au jaribu tena baada ya kufungua ukurasa upya.',true);return}const {data}=await db.auth.getSession();currentUser=data.session?.user||null;await updateAccount();await loadResources();await loadEducationCalendar()}
 async function updateAccount(){
  $('signedout').classList.toggle('hidden',!!currentUser);$('signedin').classList.toggle('hidden',!currentUser);
  $('who').textContent=currentUser?'Umeingia: '+currentUser.email:'';isAdmin=false;
