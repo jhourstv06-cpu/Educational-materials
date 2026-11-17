@@ -366,5 +366,6 @@ async function loadPayments(){if(!isAdmin)return;$('resourceform').classList.add
  document.querySelectorAll('[data-approve]').forEach(b=>b.onclick=()=>reviewPayment(b.dataset.approve,'approved'));document.querySelectorAll('[data-reject]').forEach(b=>b.onclick=()=>reviewPayment(b.dataset.reject,'rejected'));
 }
 async function reviewPayment(id,status){const {error}=await db.from('payment_submissions').update({status,reviewed_by:currentUser.id,reviewed_at:new Date().toISOString()}).eq('id',id);if(error)message('adminmsg','Imeshindikana: '+error.message,true);else{message('adminmsg',status==='approved'?'Malipo yameidhinishwa.':'Ombi limekataliwa.');await loadPayments()}}
+loadEducationCalendar();
 refreshSession();
 </script></body></html>
