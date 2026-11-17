@@ -33,7 +33,7 @@ form{display:grid;gap:10px;max-width:650px}label{font-weight:650;display:grid;ga
 footer{text-align:center;padding:25px;color:#617184}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.tabs button{width:auto}
 small{color:#617184}
 .header-top{display:flex;align-items:center;gap:14px}.menu-toggle{width:44px;height:44px;padding:0;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);font-size:1.5rem}
-.app-layout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:18px;align-items:start}.sidebar{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;position:sticky;top:14px;min-height:calc(100vh - 28px);z-index:20}.sidebar-title{font-size:.78rem;font-weight:800;letter-spacing:.08em;color:#718096;padding:8px 10px 14px}.nav-item{display:block;text-align:left;width:100%;background:transparent;color:#34465a;padding:12px 11px;margin:3px 0;border-radius:9px;font-weight:650}.nav-item:hover,.nav-item.active{background:#e5edf5;color:#123d63}.admin-nav{margin-top:14px;border-top:1px solid var(--line);border-radius:0 0 9px 9px;padding-top:16px}.app-main{min-width:0}.sidebar-backdrop{display:none}
+.app-layout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:18px;align-items:start}.sidebar{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;position:sticky;top:14px;min-height:calc(100vh - 28px);z-index:20}.sidebar-title{font-size:.78rem;font-weight:800;letter-spacing:.08em;color:#718096;padding:8px 10px 14px}.nav-item{display:block;text-align:left;width:100%;background:transparent;color:#34465a;padding:12px 11px;margin:3px 0;border-radius:9px;font-weight:650}.nav-item:hover,.nav-item.active{background:#e5edf5;color:#123d63}.admin-nav{margin-top:14px;border-top:1px solid var(--line);border-radius:0 0 9px 9px;padding-top:16px}.app-main{min-width:0}.page-section.hidden{display:none!important}.page-section{display:block;min-width:0}.sidebar-backdrop{display:none}
 @media(max-width:760px){main{padding:14px 12px}.app-layout{display:block}.sidebar{position:fixed;left:0;top:0;bottom:0;width:min(82vw,310px);min-height:0;height:100dvh;border-radius:0 14px 14px 0;overflow:auto;transform:translateX(-105%);transition:transform .22s ease;z-index:100;padding:18px 14px}.sidebar.open{transform:translateX(0)}.sidebar-backdrop.show{display:block;position:fixed;inset:0;background:rgba(10,25,40,.42);z-index:90}.app-main{width:100%}.controls{grid-template-columns:1fr}.row{display:grid}}
 
 </style></head><body>
@@ -129,9 +129,16 @@ function closeSidebar(){ $('sidebar')?.classList.remove('open');$('sidebarBackdr
 $('menuToggle')?.addEventListener('click',()=>{const open=!$('sidebar').classList.contains('open');$('sidebar').classList.toggle('open',open);$('sidebarBackdrop').classList.toggle('show',open);$('menuToggle').setAttribute('aria-expanded',String(open));});
 $('sidebarBackdrop')?.addEventListener('click',closeSidebar);
 function showPage(page,kindValue){
- document.querySelectorAll('.page-section').forEach(el=>el.classList.toggle('hidden',el.dataset.page!==page));
+ const allowed=new Set(['dashboard','booksearch','educationcalendar','tutor','admin']);
+ if(!allowed.has(page))page='dashboard';
+ document.querySelectorAll('.page-section').forEach(el=>{
+  const visible=el.dataset.page===page;
+  el.classList.toggle('hidden',!visible);
+  el.setAttribute('aria-hidden',String(!visible));
+ });
+ $('payment')?.classList.add('hidden');
  if(page==='dashboard'&&kindValue!==undefined){$('kind').value=kindValue;render();}
- if(page==='catalog'&&kindValue!==undefined){$('kind').value=kindValue;render();}
+ window.scrollTo({top:0,behavior:'instant'});
 }
 document.querySelectorAll('.nav-item').forEach(btn=>btn.addEventListener('click',()=>{
  const target=btn.dataset.target;
@@ -141,7 +148,6 @@ document.querySelectorAll('.nav-item').forEach(btn=>btn.addEventListener('click'
  else if(target==='account'){$('account').scrollIntoView({behavior:'smooth',block:'start'});}
  else {showPage(target);}
  closeSidebar();
- window.scrollTo({top:0,behavior:'smooth'});
 }));
 showPage('dashboard','');
 function message(id,text,err=false){$(id).className='msg '+(err?'error':'success');$(id).textContent=text}
