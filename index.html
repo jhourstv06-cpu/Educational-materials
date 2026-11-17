@@ -102,7 +102,7 @@ small{color:#617184}@media(max-width:650px){.controls{grid-template-columns:1fr}
 <script>
 const SUPABASE_URL="https://wntxumyzbenrefqehsax.supabase.co";
 const SUPABASE_ANON_KEY="sb_publishable_J1AM62cW0PGvyGzcPrC0yA_nwHQYIzY";
-const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+const db=window.supabase?.createClient ? window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY) : null;
 let currentUser=null,isAdmin=false,resources=[];
 const $=id=>document.getElementById(id);
 function message(id,text,err=false){$(id).className='msg '+(err?'error':'success');$(id).textContent=text}
@@ -253,7 +253,7 @@ async function saveCalendarEvent(e){
  message('calendarstatus','Tukio limehifadhiwa.');$('calendareventform').reset();$('calendarregion').value=payload.region;$('calendaryear').value=payload.event_date.slice(0,4);await loadEducationCalendar();
 }
 $('calendareventform').addEventListener('submit',saveCalendarEvent);
-\nasync function refreshSession(){const {data}=await db.auth.getSession();currentUser=data.session?.user||null;await updateAccount();await loadResources();await loadEducationCalendar()}
+\nasync function refreshSession(){if(!db){message('authmsg','Huduma ya kuingia haijapakia. Angalia intaneti au jaribu tena baada ya kufungua ukurasa upya.',true);return}const {data}=await db.auth.getSession();currentUser=data.session?.user||null;await updateAccount();await loadResources();await loadEducationCalendar()}
 async function updateAccount(){
  $('signedout').classList.toggle('hidden',!!currentUser);$('signedin').classList.toggle('hidden',!currentUser);
  $('who').textContent=currentUser?'Umeingia: '+currentUser.email:'';isAdmin=false;
@@ -262,10 +262,10 @@ async function updateAccount(){
  $('appcontent').classList.toggle('hidden',!currentUser);
  $('payment').classList.add('hidden');
 }
-$('login').onclick=async()=>{clearMsg('authmsg');const {error}=await db.auth.signInWithPassword({email:$('email').value,password:$('password').value});if(error)message('authmsg',error.message,true);else{await refreshSession();message('authmsg','Umeingia kikamilifu.')}};
-$('signup').onclick=async()=>{clearMsg('authmsg');const {data,error}=await db.auth.signUp({email:$('email').value,password:$('password').value,options:{emailRedirectTo:'https://jhourstv06-cpu.github.io/Educational-materials/'}});if(error)message('authmsg',error.message,true);else if(data.session){await refreshSession();message('authmsg','Akaunti imefunguliwa na umeingia.')}else message('authmsg','Akaunti imeundwa. Angalia barua pepe yako kuthibitisha usajili kabla ya kuingia.');};
+$('login').onclick=async()=>{clearMsg('authmsg');if(!db){message('authmsg','Huduma ya kuingia haijapakia. Angalia intaneti, kisha onyesha upya ukurasa.',true);return;}const email=$('email').value.trim(),password=$('password').value;if(!email||!password){message('authmsg','Jaza barua pepe na nenosiri kwanza.',true);return;}const btn=$('login');btn.disabled=true;btn.textContent='Inaingia...';message('authmsg','Inaunganisha na mfumo...',false);try{const {error}=await db.auth.signInWithPassword({email,password});if(error)message('authmsg','Imeshindikana kuingia: '+error.message,true);else{await refreshSession();message('authmsg','Umeingia kikamilifu.',false)}}catch(err){message('authmsg','Hitilafu ya muunganisho: '+(err?.message||'Jaribu tena.'),true)}finally{btn.disabled=false;btn.textContent='Ingia'}};
+$('signup').onclick=async()=>{clearMsg('authmsg');if(!db){message('authmsg','Huduma ya kuingia haijapakia. Angalia intaneti, kisha jaribu tena.',true);return;}try{const {data,error}=await db.auth.signUp({email:$('email').value.trim(),password:$('password').value,options:{emailRedirectTo:'https://jhourstv06-cpu.github.io/Educational-materials/'}});if(error)message('authmsg',error.message,true);else if(data.session){await refreshSession();message('authmsg','Akaunti imefunguliwa na umeingia.')}else message('authmsg','Akaunti imeundwa. Angalia barua pepe yako kuthibitisha usajili kabla ya kuingia.');}catch(err){message('authmsg','Hitilafu ya muunganisho: '+(err?.message||'Jaribu tena.'),true)}};
 $('logout').onclick=async()=>{await db.auth.signOut();currentUser=null;await updateAccount();await loadResources()};
-db.auth.onAuthStateChange((_event,session)=>{currentUser=session?.user||null;setTimeout(async()=>{await updateAccount();await loadResources();await loadEducationCalendar()},0)});
+if(db)db.auth.onAuthStateChange((_event,session)=>{currentUser=session?.user||null;setTimeout(async()=>{await updateAccount();await loadResources();await loadEducationCalendar()},0)});
 async function loadResources(){
  if(!currentUser){
   resources=[];
