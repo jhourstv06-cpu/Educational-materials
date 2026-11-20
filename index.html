@@ -337,9 +337,9 @@ function renderDashboard(){
  recent.innerHTML=newest.length?newest.map(x=>'<article class="item"><span class="pill">'+esc(x.kind||'Nyenzo')+(x.level?' · '+esc(x.level):'')+'</span><h3>'+esc(x.title)+'</h3><small>'+esc(x.subject||'Somo halijawekwa')+(x.year?' · '+esc(x.year):'')+'</small></article>').join(''):'<div class="item dashboard-recent-empty">Nyenzo mpya zitaonekana hapa baada ya kuchapishwa.</div>';
 }
 function calendarRows(){
- return calendarEventsCache===null
-  ? Object.entries(educationCalendar).flatMap(([region,years])=>Object.entries(years).flatMap(([year,items])=>items.map(e=>({...e,region,year}))))
-  : calendarEventsCache;
+ const builtIn=Object.entries(educationCalendar).flatMap(([region,years])=>Object.entries(years).flatMap(([year,items])=>items.map(e=>({...e,region,year}))));
+ const combined=[...builtIn,...(calendarEventsCache||[])],seen=new Set();
+ return combined.filter(e=>{const key=[e.region,e.date,e.title].join('|').toLowerCase();if(seen.has(key))return false;seen.add(key);return true;});
 }
 function renderNextCalendarSummary(){
  const today=new Date(),todayKey=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
