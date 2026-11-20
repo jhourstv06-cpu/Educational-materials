@@ -38,6 +38,35 @@ small{color:#617184}
 
 .calendar-event{position:relative}.calendar-next{border:2px solid #16834a!important;background:#e9f8ef!important;box-shadow:0 5px 16px rgba(22,131,74,.14);order:-1}.calendar-next h3{color:#126b3b}.calendar-next-label{display:inline-block;background:#16834a;color:#fff;font-weight:800;font-size:.76rem;letter-spacing:.03em;padding:5px 9px;border-radius:20px;margin:0 0 9px}.calendar-event .pill{margin-bottom:6px}.next-calendar-wrap{margin:18px 0 22px;padding:16px;border:1px solid #c9d9e8;border-radius:16px;background:#f3f8fc}.next-calendar-wrap>h3{margin:0 0 12px;color:#123d63}.next-calendar-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}.next-calendar-card{padding:15px;border:2px solid #16834a;border-radius:13px;background:#eaf8ef;box-shadow:0 4px 14px rgba(22,131,74,.12)}.next-calendar-region{display:block;font-weight:800;color:#123d63;margin-bottom:7px}.next-calendar-tag{display:inline-block;background:#16834a;color:white;font-size:.72rem;font-weight:850;padding:5px 9px;border-radius:20px;margin-bottom:8px}.next-calendar-card h4{margin:3px 0 8px;color:#145b35}.next-calendar-card strong{font-size:1.05rem;color:#145b35}.next-calendar-card p{margin:8px 0 0}.next-calendar-empty{border-color:#cbd5df;background:#f8fafc;box-shadow:none}.next-calendar-empty h4{color:#526273}
 .dashboard-hero{overflow:hidden;background:linear-gradient(135deg,#10243a,#1769aa);color:#fff;border:0}.dashboard-hero h1,.dashboard-hero p{color:#fff}.dashboard-kicker{font-size:.8rem;letter-spacing:.12em;font-weight:850;opacity:.85}.dashboard-hero h1{font-size:clamp(1.5rem,4vw,2.4rem);margin:8px 0}.dashboard-search{margin-top:18px;padding:14px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:14px}.dashboard-search input,.dashboard-search select{background:#fff;color:#172536}.dashboard-shortcuts,.dashboard-calendar-preview,.dashboard-recent{background:white;border:1px solid var(--line);border-radius:16px;padding:18px;margin:16px 0}.dashboard-shortcut-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:12px}.dashboard-shortcut{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:6px;background:#f4f8fc;color:#123d63;border:1px solid #dce5ef;padding:16px;border-radius:13px;min-height:122px}.dashboard-shortcut span{font-size:1.5rem}.dashboard-shortcut small{font-weight:500}.dashboard-shortcut:hover{background:#e7f1fb}.dashboard-next-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}.dashboard-calendar-button{margin-top:12px;width:auto}.dashboard-recent .item{padding:14px}.dashboard-recent .dashboard-recent-empty{color:#617184}
+
+/* Kalenda na dashboard: muonekano ulioboreshwa */
+.calendar-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:18px 0 10px;padding:12px 14px;background:#102f4d;color:#fff;border-radius:14px}
+.calendar-toolbar h3{margin:0;color:#fff;font-size:1.1rem}.calendar-toolbar button{width:auto;min-width:42px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);padding:8px 13px}
+.calendar-weekdays,.calendar-month-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.calendar-weekday{text-align:center;padding:8px 2px;font-size:.78rem;font-weight:850;color:#60758a}
+.calendar-day{min-height:92px;padding:8px 6px;border:1px solid #e0e8f0;border-radius:11px;background:#fff;display:flex;flex-direction:column;gap:5px;min-width:0}
+.calendar-day.is-today{border:2px solid #1769aa;background:#f0f7ff}
+.calendar-day.is-next{border:2px solid #16834a;background:#eaf8ef}
+.calendar-day.is-past{opacity:.68;background:#f7f9fb}
+.calendar-day-number{font-weight:850;font-size:.9rem;color:#24384d}
+.calendar-day.is-next .calendar-day-number{color:#126b3b}
+.calendar-day-events{display:flex;flex-direction:column;gap:3px}
+.calendar-day-event{font-size:.68rem;line-height:1.25;padding:4px 5px;border-radius:6px;background:#e8f1fa;color:#174d78;overflow-wrap:anywhere}
+.calendar-day.is-next .calendar-day-event{background:#16834a;color:#fff;font-weight:800}
+.calendar-legend{display:flex;gap:14px;flex-wrap:wrap;margin:10px 0 18px;font-size:.78rem;color:#607184}
+.calendar-legend span{display:flex;align-items:center;gap:6px}.calendar-legend i{width:10px;height:10px;border-radius:50%;display:inline-block;background:#16834a}
+.calendar-month-empty{padding:18px;border:1px dashed #cbd8e4;border-radius:12px;color:#617184;text-align:center}
+.dashboard-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:16px 0}
+.dashboard-stat{padding:16px;border-radius:15px;border:1px solid #dce6ef;background:#fff;box-shadow:0 3px 12px rgba(16,36,58,.04)}
+.dashboard-stat .stat-icon{font-size:1.45rem}.dashboard-stat strong{display:block;font-size:1.65rem;line-height:1.25;color:#123d63;margin:6px 0}.dashboard-stat small{font-weight:650}
+.admin-overview{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:14px 0 18px}
+.admin-overview-card{padding:15px;border:1px solid #dce6ef;border-radius:14px;background:linear-gradient(145deg,#fff,#f3f8fc)}
+.admin-overview-card strong{display:block;font-size:1.6rem;color:#123d63;margin-top:5px}
+.admin-tabs{padding:10px;background:#f1f6fb;border:1px solid #e0e8f0;border-radius:14px}
+.admin-tabs button{border-radius:10px}
+@media(max-width:760px){.calendar-day{min-height:68px;padding:5px 3px}.calendar-day-event{font-size:.58rem;padding:3px}.calendar-weekday{font-size:.68rem}.calendar-month-grid,.calendar-weekdays{gap:3px}.dashboard-stats,.admin-overview{grid-template-columns:repeat(2,minmax(0,1fr))}.dashboard-stat{padding:12px}.dashboard-stat strong{font-size:1.35rem}}
+@media(max-width:390px){.calendar-day{min-height:58px}.calendar-day-number{font-size:.78rem}.calendar-day-event{font-size:.52rem}.calendar-toolbar h3{font-size:.95rem}}
+
 </style></head><body>
 <header><div class="header-top"><div class="brand"><img class="brand-logo" src="logo-small.jpg" alt="EDUCATIONAL MATERIALS logo">EDUCATIONAL MATERIALS</div></div><div>Maktaba ya vitabu na mitihani kwa wanafunzi wa Tanzania</div></header>
 <main>
@@ -72,7 +101,12 @@ small{color:#617184}
  <div class="next-calendar-grid" id="nextCalendarCards"></div>
 </div>
 <div class="row"><label>Eneo<select id="calendarregion"><option value="bara">Tanzania Bara</option><option value="zanzibar">Zanzibar</option></select></label><label>Mwaka<select id="calendaryear"><option value="2026">2026</option><option value="2027">2027</option></select></label></div>
-<div id="calendarstatus" class="msg" aria-live="polite"></div><div id="calendarevents" class="grid"></div>
+<div id="calendarstatus" class="msg" aria-live="polite"></div>
+<div class="calendar-toolbar"><button id="calendarPrev" type="button" aria-label="Mwezi uliopita">‹</button><h3 id="calendarMonthTitle">Kalenda ya mwezi</h3><button id="calendarNext" type="button" aria-label="Mwezi unaofuata">›</button></div>
+<div class="calendar-weekdays"><div class="calendar-weekday">Jumatatu</div><div class="calendar-weekday">Jumanne</div><div class="calendar-weekday">Jumatano</div><div class="calendar-weekday">Alhamisi</div><div class="calendar-weekday">Ijumaa</div><div class="calendar-weekday">Jumamosi</div><div class="calendar-weekday">Jumapili</div></div>
+<div id="calendarMonthGrid" class="calendar-month-grid" aria-live="polite"></div>
+<div class="calendar-legend"><span><i></i> Tukio lijalo</span><span>🔵 Leo</span><span>Matukio mengine</span></div>
+<div id="calendarevents" class="grid"></div>
 <small>Ratiba inaweza kubadilishwa na mamlaka husika. Tarehe zisizothibitishwa hazitaonyeshwa kama rasmi.</small>
 </section>
 
@@ -83,6 +117,7 @@ small{color:#617184}
 <div data-page="dashboard" class="page-section" id="dashboard">
 <section class="hero dashboard-hero"><div class="dashboard-welcome"><span class="dashboard-kicker">MAKTABA YA ELIMU TANZANIA</span><h1>Karibu EDUCATIONAL MATERIALS</h1><p>Tafuta, soma na jifunze. Vitabu, mitihani, ripoti na nyenzo za kujifunzia viko sehemu moja.</p></div>
 <div class="dashboard-search"><input id="q" placeholder="🔎 Tafuta jina la kitabu, somo au mwaka"><div class="controls"><select id="kind"><option value="">Sehemu zote</option><option>Kitabu</option><option>Mtihani</option><option>Nyenzo nyingine</option><option>Kitabu cha Dini ya Kiislamu</option><option>Tafsiri ya Qur’ani</option><option>Ndoa</option><option>Mirathi</option><option>Kuoga Janaba</option><option>Ripoti za Mitihani ya Miaka Iliyopita</option></select><select id="level"><option value="">Madarasa na vidato vyote</option><optgroup label="Shule ya Msingi"><option>Darasa la Kwanza</option><option>Darasa la Pili</option><option>Darasa la Tatu</option><option>Darasa la Nne</option><option>Darasa la Tano</option><option>Darasa la Sita</option><option>Darasa la Saba</option></optgroup><optgroup label="O-Level"><option>Form One</option><option>Form Two</option><option>Form Three</option><option>Form Four</option></optgroup><optgroup label="A-Level"><option>Form Five</option><option>Form Six</option></optgroup></select><select id="subjectfilter"><option value="">Masomo yote</option><optgroup label="Msingi"><option>Kiswahili</option><option>English</option><option>Hisabati</option><option>Sayansi</option><option>Maarifa ya Jamii</option><option>Stadi za Kazi</option><option>Maarifa ya Dini ya Kiislamu</option></optgroup><optgroup label="Sekondari"><option>Basic Mathematics</option><option>Mathematics</option><option>Biology</option><option>Chemistry</option><option>Physics</option><option>Geography</option><option>History</option><option>Civics</option><option>English Language</option><option>Kiswahili</option><option>Commerce</option><option>Bookkeeping</option><option>Computer Studies</option><option>Agriculture</option><option>Literature in English</option><option>French</option><option>Arabic</option><option>Islamic Religious Knowledge</option><option>Fine Art</option><option>Food and Nutrition</option><option>Physical Education</option></optgroup></select></div></div></section>
+<section class="dashboard-stats" aria-label="Muhtasari wa maktaba"><article class="dashboard-stat"><span class="stat-icon">📚</span><strong id="statResources">0</strong><small>Nyenzo zilizochapishwa</small></article><article class="dashboard-stat"><span class="stat-icon">📖</span><strong id="statSubjects">0</strong><small>Masomo tofauti</small></article><article class="dashboard-stat"><span class="stat-icon">📅</span><strong id="statUpcoming">0</strong><small>Matukio yajayo</small></article><article class="dashboard-stat"><span class="stat-icon">🕌</span><strong id="statLibrary">3</strong><small>Sehemu kuu za maktaba</small></article></section>
 <section class="dashboard-shortcuts"><h2>Huduma zetu</h2><div class="dashboard-shortcut-grid"><button class="dashboard-shortcut" data-home-action="catalog"><span>📚</span><b>Nyenzo za Shule</b><small>Vitabu na mitihani</small></button><button class="dashboard-shortcut" data-home-action="islamic"><span>🕌</span><b>Maktaba ya Kiislamu</b><small>Dini, Qur’ani na zaidi</small></button><button class="dashboard-shortcut" data-home-action="reports"><span>📝</span><b>Ripoti za Mitihani</b><small>Ripoti za miaka iliyopita</small></button><button class="dashboard-shortcut" data-home-action="booksearch"><span>🔎</span><b>Vitabu Mtandaoni</b><small>Google Books, Open Library, TIE</small></button><button class="dashboard-shortcut" data-home-action="tutor"><span>👩🏽‍🏫</span><b>Mwalimu wa Masomo</b><small>Jifunze mada mbalimbali</small></button><button class="dashboard-shortcut" data-home-action="educationcalendar"><span>📅</span><b>Kalenda ya Elimu</b><small>Tanzania Bara na Zanzibar</small></button></div></section>
 <section class="dashboard-calendar-preview"><h2>📅 Matukio yanayofuata</h2><div class="dashboard-next-grid" id="dashboardNextEvents"><p>Inapakia matukio...</p></div><button class="secondary dashboard-calendar-button" id="dashboardOpenCalendar">Fungua kalenda kamili</button></section>
 <section class="dashboard-recent"><h2>📖 Nyenzo mpya</h2><div id="dashboardRecentResources" class="grid"><div class="item">Inapakia maktaba...</div></div></section>
@@ -111,7 +146,7 @@ small{color:#617184}
 <section class="panel hidden" id="payment"><h2>Wasilisha malipo</h2><div class="notice"><b>Bei:</b> TSh 1,000 kwa nyenzo ya kulipia<br><b>Tigo Pesa:</b> 0773614026<br>Baada ya kutuma pesa, weka kumbukumbu ya muamala. Msimamizi atakagua kabla ya ruhusa ya kupakua.</div>
 <form id="payform"><label>Nyenzo<input id="paytitle" readonly required placeholder="Chagua nyenzo ya kulipia"></label><input id="payid" type="hidden"><label>Jina la mtumaji<input id="payer" required></label><label>Namba ya simu<input id="payphone" required></label><label>Namba ya muamala<input id="reference" required></label><label>Maelezo (si lazima)<textarea id="notes"></textarea></label><button>Tuma ombi la uthibitisho</button></form><div id="paymsg" aria-live="polite"></div></section>
 
-<section class="panel page-section hidden" data-page="admin" id="admin"><h2>Dashibodi ya msimamizi</h2><div class="tabs"><button id="showupload">Ongeza kitabu/mtihani</button><button class="secondary" id="showusers">👥 Wanachama</button><button class="secondary" id="showresources">📚 Simamia vitabu</button><button class="secondary" id="showcalendar">📅 Simamia kalenda</button><button class="secondary" id="showpayments">Maombi ya malipo</button></div>
+<section class="panel page-section hidden" data-page="admin" id="admin"><h2>Dashibodi ya msimamizi</h2><div class="admin-overview" id="adminOverview"><article class="admin-overview-card">👥 Wanachama<strong id="adminStatUsers">—</strong></article><article class="admin-overview-card">📚 Nyenzo<strong id="adminStatResources">—</strong></article><article class="admin-overview-card">💳 Malipo yanayosubiri<strong id="adminStatPayments">—</strong></article><article class="admin-overview-card">📅 Matukio ya kalenda<strong id="adminStatCalendar">—</strong></article></div><div class="tabs admin-tabs"><button id="showupload">Ongeza kitabu/mtihani</button><button class="secondary" id="showusers">👥 Wanachama</button><button class="secondary" id="showresources">📚 Simamia vitabu</button><button class="secondary" id="showcalendar">📅 Simamia kalenda</button><button class="secondary" id="showpayments">Maombi ya malipo</button></div>
 <form id="resourceform"><label>Jina la nyenzo<input id="rtitle" required></label><div class="row"><label>Sehemu/Aina ya nyenzo<select id="rkind"><option>Kitabu</option><option>Mtihani</option><option>Nyenzo nyingine</option><option>Kitabu cha Dini ya Kiislamu</option><option>Tafsiri ya Qur’ani</option><option>Ndoa</option><option>Mirathi</option><option>Kuoga Janaba</option><option>Ripoti za Mitihani ya Miaka Iliyopita</option></select></label><label>Somo<select id="rsubject" required><option value="">Masomo yote</option><optgroup label="Msingi"><option>Kiswahili</option><option>English</option><option>Hisabati</option><option>Sayansi</option><option>Maarifa ya Jamii</option><option>Stadi za Kazi</option><option>Elimu ya Dini ya Kiislamu</option><option>Maarifa ya Dini ya Kiislamu</option></optgroup><optgroup label="Sekondari"><option>Basic Mathematics</option><option>Mathematics</option><option>Biology</option><option>Chemistry</option><option>Physics</option><option>Geography</option><option>History</option><option>Civics</option><option>English Language</option><option>Kiswahili</option><option>Commerce</option><option>Bookkeeping</option><option>Computer Studies</option><option>Agriculture</option><option>Literature in English</option><option>French</option><option>Arabic</option><option>Islamic Religious Knowledge</option><option>Fine Art</option><option>Food and Nutrition</option><option>Physical Education</option></optgroup></select></label></div><div class="row"><label>Darasa/kidato (kwa nyenzo za shule tu)<select id="rlevel"><option value="">Chagua darasa/kidato</option><optgroup label="Shule ya Msingi"><option>Darasa la Kwanza</option><option>Darasa la Pili</option><option>Darasa la Tatu</option><option>Darasa la Nne</option><option>Darasa la Tano</option><option>Darasa la Sita</option><option>Darasa la Saba</option></optgroup><optgroup label="O-Level"><option>Form One</option><option>Form Two</option><option>Form Three</option><option>Form Four</option></optgroup><optgroup label="A-Level"><option>Form Five</option><option>Form Six</option></optgroup></select></label><label>Mwaka<input id="ryear" type="number" min="1900" max="2100"></label></div><label>Maelezo<textarea id="rdesc"></textarea></label><label>PDF<input id="rfile" type="file" accept="application/pdf" required></label><small id="pdfinfo">PDF itajaribiwa kuandaliwa kabla ya kupakiwa. Ikiwa huduma hiyo haipatikani, PDF ya asili itapakiwa.</small><label><input id="rpaid" type="checkbox" style="width:auto"> Nyenzo ya kulipia (TSh 1,000)</label><label><input id="rpublished" type="checkbox" checked style="width:auto"> Chapisha mara moja</label><button>Hifadhi nyenzo</button></form>
 <div id="adminlist" class="hidden"></div><div id="adminmsg" aria-live="polite"></div></section>
 
@@ -327,7 +362,7 @@ const educationCalendar={
   "2027":[]
  }
 };
-let calendarEventsCache=null;
+let calendarEventsCache=null;\nlet calendarViewMonth=new Date().getMonth();
 function calendarDate(value){return new Date(value+"T00:00:00").toLocaleDateString('sw-TZ',{day:'numeric',month:'long',year:'numeric'});}
 
 function renderDashboard(){
@@ -335,6 +370,12 @@ function renderDashboard(){
  const recent=$('dashboardRecentResources');if(!recent)return;
  const newest=(resources||[]).slice().sort((a,b)=>String(b.created_at||'').localeCompare(String(a.created_at||''))).slice(0,4);
  recent.innerHTML=newest.length?newest.map(x=>'<article class="item"><span class="pill">'+esc(x.kind||'Nyenzo')+(x.level?' · '+esc(x.level):'')+'</span><h3>'+esc(x.title)+'</h3><small>'+esc(x.subject||'Somo halijawekwa')+(x.year?' · '+esc(x.year):'')+'</small></article>').join(''):'<div class="item dashboard-recent-empty">Nyenzo mpya zitaonekana hapa baada ya kuchapishwa.</div>';
+ const subjects=new Set((resources||[]).map(x=>x.subject).filter(Boolean));
+ const now=new Date(),todayKey=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+ const upcoming=calendarRows().filter(e=>e.date>=todayKey);
+ if($('statResources'))$('statResources').textContent=(resources||[]).length.toLocaleString('en-US');
+ if($('statSubjects'))$('statSubjects').textContent=subjects.size.toLocaleString('en-US');
+ if($('statUpcoming'))$('statUpcoming').textContent=upcoming.length.toLocaleString('en-US');
 }
 function calendarRows(){
  const builtIn=Object.entries(educationCalendar).flatMap(([region,years])=>Object.entries(years).flatMap(([year,items])=>items.map(e=>({...e,region,year}))));
@@ -349,6 +390,22 @@ function renderNextCalendarSummary(){
   return next?'<article class="next-calendar-card"><span class="next-calendar-region">'+label+'</span><span class="next-calendar-tag">TUKIO LINALOFUATA</span><h4>'+esc(next.title)+'</h4><strong>'+calendarDate(next.date)+'</strong><p>'+esc(next.desc||'')+'</p></article>':'<article class="next-calendar-card next-calendar-empty"><span class="next-calendar-region">'+label+'</span><h4>Hakuna tarehe ijayo iliyowekwa</h4><p>Ratiba ijayo itaonekana hapa ikiongezwa kwenye kalenda.</p></article>';
  }).join('');
 }
+function renderCalendarMonth(events,year,month,nextDate){
+ const first=new Date(Number(year),month,1),last=new Date(Number(year),month+1,0);
+ const offset=(first.getDay()+6)%7,days=last.getDate(),today=new Date();
+ const todayKey=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+ const monthName=first.toLocaleDateString('sw-TZ',{month:'long',year:'numeric'});
+ $('calendarMonthTitle').textContent=monthName.charAt(0).toUpperCase()+monthName.slice(1);
+ const byDate={};events.forEach(e=>{(byDate[e.date]??=[]).push(e);});
+ let cells='';
+ for(let i=0;i<offset;i++)cells+='<div aria-hidden="true"></div>';
+ for(let day=1;day<=days;day++){
+  const key=year+'-'+String(month+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');
+  const dayEvents=byDate[key]||[],isNext=key===nextDate,isToday=key===todayKey,isPast=key<todayKey;
+  cells+='<div class="calendar-day'+(isNext?' is-next':'')+(isToday?' is-today':'')+(isPast?' is-past':'')+'"><span class="calendar-day-number">'+day+'</span><div class="calendar-day-events">'+dayEvents.slice(0,2).map(e=>'<span class="calendar-day-event" title="'+esc(e.title)+'">'+esc(e.title)+'</span>').join('')+(dayEvents.length>2?'<small>+'+(dayEvents.length-2)+' zaidi</small>':'')+'</div></div>';
+ }
+ $('calendarMonthGrid').innerHTML=cells;
+}
 async function loadEducationCalendar(){
  if(calendarEventsCache===null&&db){
   const {data,error}=await db.from('calendar_events').select('id,region,event_date,title,event_type,description,source_url').eq('is_published',true).order('event_date');
@@ -358,6 +415,8 @@ async function loadEducationCalendar(){
  const region=$('calendarregion').value,year=$('calendaryear').value;
  const allEvents=calendarRows().filter(e=>e.region===region&&String(e.date).startsWith(year));
  const today=new Date(),todayKey=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+ if(calendarViewMonth<0)calendarViewMonth=0;if(calendarViewMonth>11)calendarViewMonth=11;
+ renderCalendarMonth(allEvents,year,calendarViewMonth,allEvents.filter(e=>e.date>=todayKey).sort((a,b)=>a.date.localeCompare(b.date))[0]?.date||null);
  const upcoming=allEvents.filter(e=>e.date>=todayKey).sort((a,b)=>a.date.localeCompare(b.date));
  const past=allEvents.filter(e=>e.date<todayKey).sort((a,b)=>b.date.localeCompare(a.date));
  const events=[...upcoming,...past],nextDate=upcoming[0]?.date||null;
@@ -376,13 +435,17 @@ async function loadEducationCalendar(){
  renderDashboard();
 }
 $('calendarregion').addEventListener('change',loadEducationCalendar);
-$('calendaryear').addEventListener('change',loadEducationCalendar);
+$('calendaryear').addEventListener('change',()=>{calendarViewMonth=0;loadEducationCalendar();});
+$('calendarPrev').addEventListener('click',()=>{if(calendarViewMonth===0){const y=Number($('calendaryear').value)-1;if(y<2026)return;$('calendaryear').value=String(y);calendarViewMonth=11;}else calendarViewMonth--;loadEducationCalendar();});
+$('calendarNext').addEventListener('click',()=>{if(calendarViewMonth===11){const y=Number($('calendaryear').value)+1;if(y>2027)return;$('calendaryear').value=String(y);calendarViewMonth=0;}else calendarViewMonth++;loadEducationCalendar();});
+$('dashboardOpenCalendar').addEventListener('click',()=>{showPage('educationcalendar');document.querySelectorAll('.nav-item').forEach(x=>x.classList.toggle('active',x.dataset.target==='educationcalendar'));loadEducationCalendar();});
 async function refreshSession(){if(!db){message('authmsg','Huduma ya kuingia haijapakia. Angalia intaneti au jaribu tena baada ya kufungua ukurasa upya.',true);return}const {data}=await db.auth.getSession();currentUser=data.session?.user||null;await updateAccount();await loadResources()}
 async function updateAccount(){
  $('signedout').classList.toggle('hidden',!!currentUser);$('signedin').classList.toggle('hidden',!currentUser);
  $('who').textContent=currentUser?'Umeingia: '+currentUser.email:'';isAdmin=false;
  if(currentUser){const {data}=await db.from('profiles').select('role,full_name').eq('id',currentUser.id).maybeSingle();isAdmin=data?.role==='admin';}
  $('admin').classList.toggle('hidden',!isAdmin);
+ if(isAdmin)loadAdminOverview();
  $('appcontent').classList.toggle('hidden',!currentUser);
  $('payment').classList.add('hidden');
 }
@@ -434,6 +497,17 @@ $('showcalendar').onclick=loadAdminCalendar;
 $('showpayments').onclick=loadPayments;
 
 
+async function loadAdminOverview(){
+ if(!isAdmin||!db)return;
+ const jobs=await Promise.all([
+  db.from('profiles').select('id',{count:'exact',head:true}),
+  db.from('resources').select('id',{count:'exact',head:true}),
+  db.from('payment_submissions').select('id',{count:'exact',head:true}).eq('status','pending'),
+  db.from('calendar_events').select('id',{count:'exact',head:true})
+ ]);
+ const ids=['adminStatUsers','adminStatResources','adminStatPayments','adminStatCalendar'];
+ jobs.forEach((result,i)=>{const el=$(ids[i]);if(el)el.textContent=result.error?'—':Number(result.count||0).toLocaleString('en-US');});
+}
 async function loadAdminCalendar(){
  if(!isAdmin)return;showAdminPanel();
  $('adminlist').innerHTML='<h3>📅 Ongeza tukio la kalenda</h3><form id="calendarEventForm"><div class="row"><label>Eneo<select id="ceRegion"><option value="bara">Tanzania Bara</option><option value="zanzibar">Zanzibar</option></select></label><label>Tarehe<input id="ceDate" type="date" required></label></div><label>Jina la tukio<input id="ceTitle" required placeholder="Mfano: Shule kufunguliwa"></label><div class="row"><label>Aina<select id="ceType"><option>Kufungua shule</option><option>Kufunga shule</option><option>Likizo</option><option>Mtihani</option><option>Mtihani wa Taifa</option><option>Matukio mengine</option></select></label><label>Kiungo cha chanzo (si lazima)<input id="ceSource" type="url" placeholder="https://..."></label></div><label>Maelezo<textarea id="ceDesc" rows="2"></textarea></label><label><input id="cePublished" type="checkbox" checked style="width:auto"> Onyesha kwa wanafunzi</label><button type="submit">Hifadhi tukio</button></form><div id="calendarAdminStatus" class="msg"></div><h3>Matukio yaliyohifadhiwa</h3><div id="calendarAdminRows">Inapakia...</div>';
@@ -468,7 +542,7 @@ async function toggleResource(id,published){
  const {error}=await db.from('resources').update({published}).eq('id',id);
  if(error){message('adminmsg','Imeshindikana kubadilisha hali ya kitabu: '+error.message,true);return;}
  message('adminmsg',published?'Kitabu kimewashwa na kitaonekana kwa wanafunzi.':'Kitabu kimezimwa; hakitaonekana kwa wanafunzi wapya.');
- await loadAdminResources();await loadResources();
+ await loadAdminOverview();await loadAdminResources();await loadResources();
 }
 async function optimizePDF(file){try{if(!window.PDFLib){await new Promise((resolve,reject)=>{const s=document.createElement('script');s.src='https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js';s.onload=resolve;s.onerror=()=>reject(new Error('Maktaba haikupatikana'));document.head.appendChild(s);});}if(!window.PDFLib)return file;const bytes=await file.arrayBuffer();const doc=await window.PDFLib.PDFDocument.load(bytes);const out=await doc.save({useObjectStreams:true,addDefaultPage:false});return new File([out],file.name,{type:'application/pdf'});}catch(err){console.warn('PDF optimization skipped:',err);return file;}}
 $('resourceform').onsubmit=async e=>{e.preventDefault();clearMsg('adminmsg');if(!isAdmin){message('adminmsg','Huna ruhusa ya msimamizi.',true);return}const original=$('rfile').files[0];if(!original||original.type!=='application/pdf'){message('adminmsg','Chagua faili la PDF.',true);return}
