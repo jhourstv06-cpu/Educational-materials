@@ -94,6 +94,30 @@ drop policy if exists "admins review submissions" on public.payment_submissions;
 create policy "admins review submissions" on public.payment_submissions for update to authenticated
 using (public.is_admin()) with check (public.is_admin());
 
+
+-- Education calendar events (Mainland and Zanzibar)
+create table if not exists public.calendar_events (
+ id uuid primary key default gen_random_uuid(),
+ region text not null check (region in ('bara','zanzibar')),
+ event_date date not null,
+ title text not null,
+ event_type text not null,
+ description text,
+ source_url text,
+ is_published boolean not null default true,
+ created_by uuid references auth.users(id),
+ created_at timestamptz not null default now()
+);
+create index if not exists calendar_events_region_date_idx on public.calendar_events(region,event_date);
+alter table public.calendar_events enable row level security;
+drop policy if exists "published calendar visible" on public.calendar_events;
+create policy "published calendar visible" on public.calendar_events for select to authenticated
+using (is_published=true or public.is_admin());
+drop policy if exists "admins manage calendar" on public.calendar_events;
+create policy "admins manage calendar" on public.calendar_events for all to authenticated
+using (public.is_admin()) with check (public.is_admin());
+grant select, insert, update, delete on public.calendar_events to authenticated;
+
 -- Create a PRIVATE Storage bucket named "materials" in Storage, or run:
 insert into storage.buckets (id, name, public)
 values ('materials', 'materials', false)
