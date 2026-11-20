@@ -336,42 +336,44 @@ function renderDashboard(){
  const newest=(resources||[]).slice().sort((a,b)=>String(b.created_at||'').localeCompare(String(a.created_at||''))).slice(0,4);
  recent.innerHTML=newest.length?newest.map(x=>'<article class="item"><span class="pill">'+esc(x.kind||'Nyenzo')+(x.level?' · '+esc(x.level):'')+'</span><h3>'+esc(x.title)+'</h3><small>'+esc(x.subject||'Somo halijawekwa')+(x.year?' · '+esc(x.year):'')+'</small></article>').join(''):'<div class="item dashboard-recent-empty">Nyenzo mpya zitaonekana hapa baada ya kuchapishwa.</div>';
 }
+function calendarRows(){
+ return calendarEventsCache===null
+  ? Object.entries(educationCalendar).flatMap(([region,years])=>Object.entries(years).flatMap(([year,items])=>items.map(e=>({...e,region,year}))))
+  : calendarEventsCache;
+}
 function renderNextCalendarSummary(){
- const today=new Date();
- const todayKey=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
- const regions=[['bara','Tanzania Bara'],['zanzibar','Zanzibar']];
+ const today=new Date(),todayKey=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+ const regions=[['bara','Tanzania Bara'],['zanzibar','Zanzibar']],all=calendarRows();
  $('nextCalendarCards').innerHTML=regions.map(([key,label])=>{
-  const future=Object.values(educationCalendar[key]||{}).flat().filter(e=>e.date>=todayKey).sort((a,b)=>a.date.localeCompare(b.date));
-  const next=future[0];
-  return next
-   ? '<article class="next-calendar-card"><span class="next-calendar-region">'+label+'</span><span class="next-calendar-tag">TUKIO LINALOFUATA</span><h4>'+esc(next.title)+'</h4><strong>'+calendarDate(next.date)+'</strong><p>'+esc(next.desc)+'</p></article>'
-   : '<article class="next-calendar-card next-calendar-empty"><span class="next-calendar-region">'+label+'</span><h4>Hakuna tarehe ijayo iliyowekwa</h4><p>Ratiba ijayo itaonekana hapa ikiongezwa kwenye kalenda.</p></article>';
+  const next=all.filter(e=>e.region===key&&e.date>=todayKey).sort((a,b)=>a.date.localeCompare(b.date))[0];
+  return next?'<article class="next-calendar-card"><span class="next-calendar-region">'+label+'</span><span class="next-calendar-tag">TUKIO LINALOFUATA</span><h4>'+esc(next.title)+'</h4><strong>'+calendarDate(next.date)+'</strong><p>'+esc(next.desc||'')+'</p></article>':'<article class="next-calendar-card next-calendar-empty"><span class="next-calendar-region">'+label+'</span><h4>Hakuna tarehe ijayo iliyowekwa</h4><p>Ratiba ijayo itaonekana hapa ikiongezwa kwenye kalenda.</p></article>';
  }).join('');
 }
-function loadEducationCalendar(){
+async function loadEducationCalendar(){
+ if(calendarEventsCache===null&&db){
+  const {data,error}=await db.from('calendar_events').select('id,region,event_date,title,event_type,description,source_url').eq('is_published',true).order('event_date');
+  if(!error&&data?.length)calendarEventsCache=data.map(e=>({id:e.id,region:e.region,date:String(e.event_date).slice(0,10),title:e.title,type:e.event_type,desc:e.description||'',source_url:e.source_url||''}));
+ }
  renderNextCalendarSummary();
  const region=$('calendarregion').value,year=$('calendaryear').value;
- const allEvents=educationCalendar[region]?.[year]||[];
- const today=new Date();
- const todayKey=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+ const allEvents=calendarRows().filter(e=>e.region===region&&String(e.date).startsWith(year));
+ const today=new Date(),todayKey=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
  const upcoming=allEvents.filter(e=>e.date>=todayKey).sort((a,b)=>a.date.localeCompare(b.date));
  const past=allEvents.filter(e=>e.date<todayKey).sort((a,b)=>b.date.localeCompare(a.date));
- const events=[...upcoming,...past];
- const nextDate=upcoming[0]?.date||null;
+ const events=[...upcoming,...past],nextDate=upcoming[0]?.date||null;
  $('calendarevents').innerHTML='';
  if(!events.length){
   $('calendarstatus').className='msg';
-  $('calendarstatus').textContent=region==='zanzibar'
-   ?'Bado hakuna tarehe rasmi zilizochapishwa/kuhakikishwa na Wizara ya Elimu Zanzibar kwa mwaka huu. Tutaziongeza zikithibitishwa.'
-   :'Bado hakuna kalenda rasmi iliyothibitishwa kwa mwaka huu. Tafadhali fuatilia tangazo la Wizara ya Elimu.';
-  return;
+  $('calendarstatus').textContent=region==='zanzibar'?'Bado hakuna tarehe rasmi zilizochapishwa/kuhakikishwa kwa mwaka huu. Tutaziongeza zikithibitishwa.':'Bado hakuna kalenda rasmi iliyothibitishwa kwa mwaka huu. Tafadhali fuatilia tangazo la Wizara ya Elimu.';
+  renderDashboard();return;
  }
  $('calendarstatus').className='msg success';
  $('calendarstatus').textContent=events.length+' matukio ya kalenda · '+(region==='bara'?'Tanzania Bara':'Zanzibar')+' · '+year;
- $('calendarevents').innerHTML=events.map(e=>{const isNext=e.date===nextDate;return '<article class="item calendar-event'+(isNext?' calendar-next':'')+'">'+(isNext?'<span class="calendar-next-label">★ TAREHE INAYOFUATA</span>':'')+'<span class="pill">'+esc(e.type)+'</span><h3>'+esc(e.title)+'</h3><b>'+calendarDate(e.date)+'</b><p>'+esc(e.desc)+'</p></article>';}).join('');
- if(region==='bara'&&year==='2026'){
+ $('calendarevents').innerHTML=events.map(e=>{const isNext=e.date===nextDate;return '<article class="item calendar-event'+(isNext?' calendar-next':'')+'">'+(isNext?'<span class="calendar-next-label">★ TAREHE INAYOFUATA</span>':'')+'<span class="pill">'+esc(e.type||e.event_type||'Tukio')+'</span><h3>'+esc(e.title)+'</h3><b>'+calendarDate(e.date)+'</b><p>'+esc(e.desc||e.description||'')+'</p>'+(e.source_url?'<p><a href="'+esc(e.source_url)+'" target="_blank" rel="noopener noreferrer">Chanzo / waraka</a></p>':'')+'</article>';}).join('');
+ if(region==='bara'&&year==='2026'&&calendarEventsCache===null){
   $('calendarevents').innerHTML+='<article class="item"><h3>📄 Nyaraka rasmi</h3><p>Kalenda ya awali ya 2026 na marekebisho ya tarehe ya kufunga shule.</p><p><a href="https://www.moe.go.tz/sw/file/9087/download?token=bzs4Zud_" target="_blank" rel="noopener noreferrer">Waraka wa Elimu Na. 05 wa 2025</a></p><p><a href="https://www.moe.go.tz/en/public-notices/education-circular-no-3-of-the-year-2026-on-changes-to-the-school-closing-dates-for-pre-primary-primary-and-secondary-schools-in-tanzania-mainland" target="_blank" rel="noopener noreferrer">Waraka wa Elimu Na. 3 wa 2026 (marekebisho)</a></p></article>';
  }
+ renderDashboard();
 }
 $('calendarregion').addEventListener('change',loadEducationCalendar);
 $('calendaryear').addEventListener('change',loadEducationCalendar);
