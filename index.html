@@ -362,7 +362,8 @@ const educationCalendar={
   "2027":[]
  }
 };
-let calendarEventsCache=null;\nlet calendarViewMonth=new Date().getMonth();
+let calendarEventsCache=null;
+let calendarViewMonth=new Date().getMonth();
 function calendarDate(value){return new Date(value+"T00:00:00").toLocaleDateString('sw-TZ',{day:'numeric',month:'long',year:'numeric'});}
 
 function renderDashboard(){
