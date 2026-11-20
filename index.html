@@ -328,7 +328,14 @@ const educationCalendar={
  }
 };
 function calendarDate(value){return new Date(value+"T00:00:00").toLocaleDateString('sw-TZ',{day:'numeric',month:'long',year:'numeric'});}
-\nfunction renderDashboard(){\n const container=$('dashboardNextEvents');if(container)container.innerHTML=$('nextCalendarCards')?.innerHTML||'<p>Matukio hayajapatikana.</p>';\n const recent=$('dashboardRecentResources');if(!recent)return;\n const newest=(resources||[]).slice().sort((a,b)=>String(b.created_at||'').localeCompare(String(a.created_at||''))).slice(0,4);\n recent.innerHTML=newest.length?newest.map(x=>'<article class="item"><span class="pill">'+esc(x.kind||'Nyenzo')+(x.level?' · '+esc(x.level):'')+'</span><h3>'+esc(x.title)+'</h3><small>'+esc(x.subject||'Somo halijawekwa')+(x.year?' · '+esc(x.year):'')+'</small></article>').join(''):'<div class="item dashboard-recent-empty">Nyenzo mpya zitaonekana hapa baada ya kuchapishwa.</div>';\n}\nfunction renderNextCalendarSummary(){
+
+function renderDashboard(){
+ const container=$('dashboardNextEvents');if(container)container.innerHTML=$('nextCalendarCards')?.innerHTML||'<p>Matukio hayajapatikana.</p>';
+ const recent=$('dashboardRecentResources');if(!recent)return;
+ const newest=(resources||[]).slice().sort((a,b)=>String(b.created_at||'').localeCompare(String(a.created_at||''))).slice(0,4);
+ recent.innerHTML=newest.length?newest.map(x=>'<article class="item"><span class="pill">'+esc(x.kind||'Nyenzo')+(x.level?' · '+esc(x.level):'')+'</span><h3>'+esc(x.title)+'</h3><small>'+esc(x.subject||'Somo halijawekwa')+(x.year?' · '+esc(x.year):'')+'</small></article>').join(''):'<div class="item dashboard-recent-empty">Nyenzo mpya zitaonekana hapa baada ya kuchapishwa.</div>';
+}
+function renderNextCalendarSummary(){
  const today=new Date();
  const todayKey=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
  const regions=[['bara','Tanzania Bara'],['zanzibar','Zanzibar']];
