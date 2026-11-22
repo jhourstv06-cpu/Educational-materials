@@ -33,7 +33,8 @@ form{display:grid;gap:10px;max-width:650px}label{font-weight:650;display:grid;ga
 footer{text-align:center;padding:25px;color:#617184}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.tabs button{width:auto}
 small{color:#617184}
 .header-top{display:flex;align-items:center;gap:14px}.menu-toggle{width:44px;height:44px;padding:0;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);font-size:1.5rem}
-.app-layout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:18px;align-items:start}.app-layout.sidebar-collapsed{grid-template-columns:minmax(0,1fr)}.app-layout.sidebar-collapsed .sidebar{display:none}.sidebar{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;position:sticky;top:14px;min-height:calc(100vh - 28px);z-index:20}.app-menu-bar{position:fixed;top:10px;right:12px;z-index:120;margin:0}.app-menu-bar .menu-toggle{background:#123d63;color:#fff;border:1px solid #123d63;box-shadow:0 2px 8px rgba(0,0,0,.22)}.sidebar-title{font-size:.78rem;font-weight:800;letter-spacing:.08em;color:#718096;padding:8px 10px 14px}.nav-item{display:block;text-align:left;width:100%;background:transparent;color:#34465a;padding:12px 11px;margin:3px 0;border-radius:9px;font-weight:650}.nav-item:hover,.nav-item.active{background:#e5edf5;color:#123d63}.admin-nav{margin-top:14px;border-top:1px solid var(--line);border-radius:0 0 9px 9px;padding-top:16px}.app-main{min-width:0}.page-section.hidden{display:none!important}.page-section{display:block;min-width:0}.sidebar-backdrop{display:none}
+.app-layout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:18px;align-items:start}.app-layout.sidebar-collapsed{grid-template-columns:minmax(0,1fr)}.app-layout.sidebar-collapsed .sidebar{display:none}.sidebar{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;position:sticky;top:14px;min-height:calc(100vh - 28px);z-index:20}.app-menu-bar{position:fixed;top:10px;right:12px;z-index:120;margin:0}.app-menu-bar .menu-toggle{background:#123d63;color:#fff;border:1px solid #123d63;box-shadow:0 2px 8px rgba(0,0,0,.22)}.sidebar-title{font-size:.78rem;font-weight:800;letter-spacing:.08em;color:#718096;padding:8px 10px 14px}.nav-item{display:block;text-align:left;width:100%;background:transparent;color:#34465a;padding:12px 11px;margin:3px 0;border-radius:9px;font-weight:650}.nav-item:hover,.nav-item.active{background:#e5edf5;color:#123d63}.admin-nav{margin-top:14px;border-top:1px solid var(--line);border-radius:0 0 9px 9px;padding-top:16px}.app-main{min-width:0}
+.chat-unread-badge{display:inline-flex;align-items:center;justify-content:center;min-width:21px;height:21px;padding:0 6px;margin-left:5px;border-radius:20px;background:#d62828;color:#fff;font-size:12px;font-weight:800}.chat-notice{position:fixed;right:18px;top:18px;z-index:2000;max-width:min(360px,calc(100vw - 36px));padding:13px 16px;border-radius:12px;background:#123d63;color:#fff;box-shadow:0 6px 24px #0003;font-weight:700}.chat-notice small{display:block;color:#e7f2ff;font-weight:400}.page-section.hidden{display:none!important}.page-section{display:block;min-width:0}.sidebar-backdrop{display:none}
 @media(max-width:760px){main{padding:14px 12px}.app-layout{display:block}.sidebar{position:fixed;left:0;top:0;bottom:0;width:min(82vw,310px);min-height:0;height:100dvh;border-radius:0 14px 14px 0;overflow:auto;transform:translateX(-105%);transition:transform .22s ease;z-index:100;padding:18px 14px}.sidebar.open{transform:translateX(0)}.sidebar-backdrop.show{display:block;position:fixed;inset:0;background:rgba(10,25,40,.42);z-index:90}.app-main{width:100%}.controls{grid-template-columns:1fr}.row{display:grid}}
 
 .calendar-event{position:relative}.calendar-next{border:2px solid #16834a!important;background:#e9f8ef!important;box-shadow:0 5px 16px rgba(22,131,74,.14);order:-1}.calendar-next h3{color:#126b3b}.calendar-next-label{display:inline-block;background:#16834a;color:#fff;font-weight:800;font-size:.76rem;letter-spacing:.03em;padding:5px 9px;border-radius:20px;margin:0 0 9px}.calendar-event .pill{margin-bottom:6px}.next-calendar-wrap{margin:18px 0 22px;padding:16px;border:1px solid #c9d9e8;border-radius:16px;background:#f3f8fc}.next-calendar-wrap>h3{margin:0 0 12px;color:#123d63}.next-calendar-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}.next-calendar-card{padding:15px;border:2px solid #16834a;border-radius:13px;background:#eaf8ef;box-shadow:0 4px 14px rgba(22,131,74,.12)}.next-calendar-region{display:block;font-weight:800;color:#123d63;margin-bottom:7px}.next-calendar-tag{display:inline-block;background:#16834a;color:white;font-size:.72rem;font-weight:850;padding:5px 9px;border-radius:20px;margin-bottom:8px}.next-calendar-card h4{margin:3px 0 8px;color:#145b35}.next-calendar-card strong{font-size:1.05rem;color:#145b35}.next-calendar-card p{margin:8px 0 0}.next-calendar-empty{border-color:#cbd5df;background:#f8fafc;box-shadow:none}.next-calendar-empty h4{color:#526273}
@@ -90,12 +91,13 @@ small{color:#617184}
 <button class="nav-item" data-target="educationcalendar" type="button">📅 Kalenda ya Elimu</button>
 <button class="nav-item" data-target="tutor" type="button">👩🏽‍🏫 Mwalimu wa Masomo</button>
 <button class="nav-item" data-target="calculator" type="button">🧮 Scientific Calculator</button>
-<button class="nav-item" data-target="educhat" type="button">💬 EDU CHAT</button>
+<button class="nav-item" data-target="educhat" type="button">💬 EDU CHAT <span id="chatUnreadBadge" class="chat-unread-badge hidden" aria-label="Ujumbe mpya">0</span></button>
 <button class="nav-item" data-target="account" type="button">👤 Akaunti Yangu</button>
 <button class="nav-item admin-nav" data-target="admin" type="button">⚙️ Usimamizi wa Admin</button>
 </aside>
 <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 <div class="app-main" id="appmain">
+<div id="chatNotice" class="chat-notice hidden" role="status" aria-live="polite"></div>
 <section class="panel page-section hidden" data-page="educationcalendar" id="educationcalendar">
 <h2>📅 Kalenda ya Elimu</h2>
 <p>Kalenda inaonyesha tarehe zilizothibitishwa kutoka kwenye vyanzo rasmi. Chagua eneo na mwaka kuona ratiba.</p>
@@ -202,7 +204,7 @@ document.querySelectorAll('.nav-item').forEach(btn=>btn.addEventListener('click'
  if(target==='catalog'){showPage('dashboard',btn.dataset.kind||'');}
  else if(target==='dashboard'){showPage('dashboard','');}
  else if(target==='account'){$('account').scrollIntoView({behavior:'smooth',block:'start'});}
- else {showPage(target);if(target==='educhat'){loadChatMembers();loadChatSocial();loadGroupMessages();}}
+ else {showPage(target);if(target==='educhat'){clearChatUnread();loadChatMembers();loadChatSocial();loadGroupMessages();}}
  closeSidebar();
 }));
 showPage('dashboard','');
@@ -471,8 +473,8 @@ async function updateAccount(){
 }
 $('login').onclick=async()=>{clearMsg('authmsg');if(!db){message('authmsg','Huduma ya kuingia haijapakia. Angalia intaneti, kisha onyesha upya ukurasa.',true);return;}const email=$('email').value.trim(),password=$('password').value;if(!email||!password){message('authmsg','Jaza barua pepe na nenosiri kwanza.',true);return;}const btn=$('login');btn.disabled=true;btn.textContent='Inaingia...';message('authmsg','Inaunganisha na mfumo...',false);try{const {error}=await db.auth.signInWithPassword({email,password});if(error)message('authmsg','Imeshindikana kuingia: '+error.message,true);else{await refreshSession();message('authmsg','Umeingia kikamilifu.',false)}}catch(err){message('authmsg','Hitilafu ya muunganisho: '+(err?.message||'Jaribu tena.'),true)}finally{btn.disabled=false;btn.textContent='Ingia'}};
 $('signup').onclick=async()=>{clearMsg('authmsg');if(!db){message('authmsg','Huduma ya kuingia haijapakia. Angalia intaneti, kisha jaribu tena.',true);return;}try{const {data,error}=await db.auth.signUp({email:$('email').value.trim(),password:$('password').value,options:{emailRedirectTo:'https://jhourstv06-cpu.github.io/Educational-materials/'}});if(error)message('authmsg',error.message,true);else if(data.session){await refreshSession();message('authmsg','Akaunti imefunguliwa na umeingia.')}else message('authmsg','Akaunti imeundwa. Angalia barua pepe yako kuthibitisha usajili kabla ya kuingia.');}catch(err){message('authmsg','Hitilafu ya muunganisho: '+(err?.message||'Jaribu tena.'),true)}};
-$('logout').onclick=async()=>{await db.auth.signOut();currentUser=null;await updateAccount();await loadResources()};
-if(db)db.auth.onAuthStateChange((_event,session)=>{currentUser=session?.user||null;setTimeout(async()=>{await updateAccount();await loadResources()},0)});
+$('logout').onclick=async()=>{await db.auth.signOut();currentUser=null;if(chatPollTimer)clearInterval(chatPollTimer);chatNoticeCount=0;updateChatUnreadBadge();await updateAccount();await loadResources()};
+if(db)db.auth.onAuthStateChange((_event,session)=>{currentUser=session?.user||null;startChatNotifications();setTimeout(async()=>{await updateAccount();await loadResources()},0)});
 async function loadResources(){
  if(!currentUser){
   resources=[];
@@ -618,6 +620,52 @@ async function loadGroupMessages(){
  $('groupMessages').scrollTop=$('groupMessages').scrollHeight;
 }
 $('groupMessageForm').onsubmit=async e=>{e.preventDefault();const body=$('groupMessageText').value.trim();if(!body)return;const {error}=await db.from('group_messages').insert({sender_id:currentUser.id,body});if(error){chatStatus('Ujumbe wa wote haukutumwa: '+error.message,true);return;}$('groupMessageText').value='';await loadGroupMessages();chatStatus('Ujumbe umetumwa kwa wanachama wote.');};
+let chatPollTimer=null,chatNoticeCount=0,chatNoticeWatermark=null;
+function showChatNotice(message){
+ const el=$('chatNotice');if(!el)return;
+ el.innerHTML=chatSafe(message)+'<small>Fungua EDU CHAT kusoma ujumbe.</small>';
+ el.classList.remove('hidden');
+ clearTimeout(window.chatNoticeTimeout);
+ window.chatNoticeTimeout=setTimeout(()=>el.classList.add('hidden'),6500);
+}
+function updateChatUnreadBadge(){
+ const badge=$('chatUnreadBadge');if(!badge)return;
+ badge.textContent=String(chatNoticeCount);
+ badge.classList.toggle('hidden',chatNoticeCount<1);
+}
+function clearChatUnread(){
+ chatNoticeCount=0;updateChatUnreadBadge();
+ chatNoticeWatermark=new Date().toISOString();
+ $('chatNotice')?.classList.add('hidden');
+}
+async function pollChatNotifications(){
+ if(!currentUser||!db)return;
+ if(!chatNoticeWatermark){chatNoticeWatermark=new Date().toISOString();return;}
+ const since=chatNoticeWatermark;
+ const [dm,gm]=await Promise.all([
+  db.from('direct_messages').select('id,sender_id,body,created_at').eq('receiver_id',currentUser.id).gt('created_at',since).order('created_at',{ascending:true}).limit(20),
+  db.from('group_messages').select('id,sender_id,body,created_at').neq('sender_id',currentUser.id).gt('created_at',since).order('created_at',{ascending:true}).limit(20)
+ ]);
+ const found=[...(dm.data||[]).map(x=>({...x,kind:'binafsi'})),...(gm.data||[]).map(x=>({...x,kind:'wote'}))].sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
+ chatNoticeWatermark=new Date().toISOString();
+ if(found.length){
+  const latest=found[found.length-1];
+  const onChat=!$('educhat')?.classList.contains('hidden');
+  if(onChat){
+   if(latest.kind==='binafsi'&&selectedChatMember?.id===latest.sender_id)await loadDirectMessages();
+   if(latest.kind==='wote')await loadGroupMessages();
+   if(onChat){clearChatUnread();return;}
+  }
+  chatNoticeCount+=found.length;updateChatUnreadBadge();
+  showChatNotice(found.length===1?'Ujumbe mpya '+(latest.kind==='binafsi'?'binafsi':'kwenye ukumbi wa wote')+': '+latest.body:(found.length+' ujumbe mpya umefika.'));
+ }
+}
+function startChatNotifications(){
+ if(chatPollTimer)clearInterval(chatPollTimer);
+ chatNoticeCount=0;updateChatUnreadBadge();chatNoticeWatermark=new Date().toISOString();
+ if(currentUser)chatPollTimer=setInterval(pollChatNotifications,10000);
+}
+
 async function searchChatMembers(){await loadChatMembers();}
 async function sendFriendRequest(id){const {data:existing,error:readErr}=await db.from('friend_requests').select('id,status').or('and(sender_id.eq.'+currentUser.id+',receiver_id.eq.'+id+'),and(sender_id.eq.'+id+',receiver_id.eq.'+currentUser.id+')');if(readErr){chatStatus(readErr.message,true);return;}if(existing?.length){chatStatus('Ombi au urafiki tayari upo.');return;}const {error}=await db.from('friend_requests').insert({sender_id:currentUser.id,receiver_id:id,status:'pending'});if(error)chatStatus('Ombi halijatumwa: '+error.message,true);else{chatStatus('Ombi la urafiki limetumwa.');loadChatSocial();}}
 async function loadChatSocial(){if(!currentUser)return;const {data:requests,error}=await db.from('friend_requests').select('*').eq('receiver_id',currentUser.id).eq('status','pending');if(error){$('chatIncoming').textContent=error.message;return;}const ids=(requests||[]).map(x=>x.sender_id);let people={};if(ids.length){const {data}=await db.from('member_directory').select('id,full_name,role').in('id',ids);(data||[]).forEach(p=>people[p.id]=p);}$('chatIncoming').innerHTML=requests?.length?requests.map(r=>'<article class="item"><b>'+chatSafe(people[r.sender_id]?.full_name||'Mwanachama')+'</b><div class="row"><button data-friend-accept="'+r.id+'">Kubali</button><button class="secondary" data-friend-reject="'+r.id+'">Kataa</button></div></article>').join(''):'Hakuna maombi mapya.';document.querySelectorAll('[data-friend-accept]').forEach(b=>b.onclick=()=>respondFriend(b.dataset.friendAccept,'accepted'));document.querySelectorAll('[data-friend-reject]').forEach(b=>b.onclick=()=>respondFriend(b.dataset.friendReject,'rejected'));const {data:out}=await db.from('friend_requests').select('*').eq('sender_id',currentUser.id).eq('status','accepted');const incoming=await db.from('friend_requests').select('*').eq('receiver_id',currentUser.id).eq('status','accepted');const friendIds=[...(out||[]).map(x=>x.receiver_id),...(incoming.data||[]).map(x=>x.sender_id)];let friends=[];if(friendIds.length){const {data}=await db.from('member_directory').select('id,full_name,role').in('id',friendIds);friends=data||[];}$('chatFriends').innerHTML=friends.length?friends.map(p=>'<article class="item"><b>'+chatSafe(p.full_name||'Mwanachama')+'</b><small>'+(p.role==='admin'?'Mwalimu / Admin':'Mwanafunzi')+'</small><button type="button" data-chat-friend="'+p.id+'">Tuma ujumbe</button></article>').join(''):'Bado hujaongeza marafiki.';document.querySelectorAll('[data-chat-friend]').forEach(b=>b.onclick=()=>selectChatMember(b.dataset.chatFriend,friends));}
