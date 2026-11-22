@@ -104,6 +104,8 @@ small{color:#617184}
 .chat-social-grid>section{min-width:0}
 @media(max-width:700px){.chat-shell{grid-template-columns:1fr;min-height:0}.chat-contacts{border-right:0;border-bottom:1px solid #dce5ef}.chat-member-list{max-height:240px}.chat-message-area{min-height:210px;max-height:320px}.chat-social-grid{grid-template-columns:1fr}.chat-compose{flex-direction:column;align-items:stretch}.chat-compose button{width:100%}}
 
+
+.chat-compose-media{display:block}.chat-media-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px}.chat-attach{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border:1px solid #cbd8e5;border-radius:10px;background:#f4f8fc;color:#145b91;font-weight:700;cursor:pointer}.chat-media-tools button{width:auto;min-width:120px}.chat-media-status{font-size:.78rem;color:#64748b;flex:1;min-width:90px}.chat-media-image{display:block;max-width:min(260px,100%);max-height:260px;object-fit:contain;border-radius:10px;margin-top:7px}.chat-media-audio{display:block;max-width:260px;width:100%;margin-top:7px}
 </style><script src="https://cdn.jsdelivr.net/npm/mathjs@14.8.1/lib/browser/math.js"></script>
 </head><body>
 <header><div class="header-top"><div class="brand"><img class="brand-logo" src="logo-small.jpg" alt="EDUCATIONAL MATERIALS logo">EDUCATIONAL MATERIALS</div></div><div>Maktaba ya vitabu na mitihani kwa wanafunzi wa Tanzania</div></header>
@@ -208,9 +210,9 @@ small{color:#617184}
 <h2>💬 EDU CHAT</h2><p>Wasiliana na walimu, wanafunzi na marafiki wako kwa urahisi.</p>
 <div class="chat-shell">
  <aside class="chat-contacts"><div class="chat-contacts-head"><h3>👥 Wanachama</h3><button id="chatReloadBtn" type="button" class="secondary">↻</button></div><input id="chatSearch" placeholder="Tafuta mwanachama..."><div id="chatSearchResults" class="chat-member-list">Inapakia majina...</div></aside>
- <section class="chat-conversation" id="directChatPanel"><div class="chat-conversation-head"><div class="chat-avatar chat-avatar-large">ED</div><div><h3 id="directChatTitle">Karibu EDU CHAT</h3><small>Chagua jina upande wa kushoto kuanza mazungumzo</small></div></div><div id="directMessages" class="chat-message-area">Hakuna mazungumzo yaliyochaguliwa.</div><form id="directMessageForm" class="chat-compose"><textarea id="directMessageText" rows="2" required placeholder="Andika ujumbe wako..." aria-label="Ujumbe binafsi"></textarea><button type="submit" aria-label="Tuma ujumbe">➤ Tuma</button></form></section>
+ <section class="chat-conversation" id="directChatPanel"><div class="chat-conversation-head"><div class="chat-avatar chat-avatar-large">ED</div><div><h3 id="directChatTitle">Karibu EDU CHAT</h3><small>Chagua jina upande wa kushoto kuanza mazungumzo</small></div></div><div id="directMessages" class="chat-message-area">Hakuna mazungumzo yaliyochaguliwa.</div><form id="directMessageForm" class="chat-compose chat-compose-media"><textarea id="directMessageText" rows="2" placeholder="Andika ujumbe wako..." aria-label="Ujumbe binafsi"></textarea><div class="chat-media-tools"><label class="chat-attach">📷 Picha<input id="directImageFile" type="file" accept="image/*" hidden></label><button type="button" id="directRecordBtn" class="secondary">🎙️ Rekodi sauti</button><span id="directMediaStatus" class="chat-media-status"></span><button type="submit" aria-label="Tuma ujumbe">➤ Tuma</button></div></form></section>
 </div>
-<section class="panel chat-group-panel" id="publicChatPanel"><div class="chat-group-heading"><h3>🌍 Ukumbi wa wote</h3><button type="button" class="secondary" id="groupReloadBtn">↻ Onyesha ujumbe mpya</button></div><p>Ujumbe unaotumwa hapa unaweza kusomwa na wanachama wote walioingia.</p><div id="groupMessages" class="chat-message-area chat-group-messages">Inapakia ujumbe...</div><form id="groupMessageForm" class="chat-compose"><textarea id="groupMessageText" rows="2" required placeholder="Andika ujumbe kwa wanachama wote..." aria-label="Ujumbe kwa wote"></textarea><button type="submit">➤ Tuma kwa wote</button></form></section>
+<section class="panel chat-group-panel" id="publicChatPanel"><div class="chat-group-heading"><h3>🌍 Ukumbi wa wote</h3><button type="button" class="secondary" id="groupReloadBtn">↻ Onyesha ujumbe mpya</button></div><p>Ujumbe unaotumwa hapa unaweza kusomwa na wanachama wote walioingia.</p><div id="groupMessages" class="chat-message-area chat-group-messages">Inapakia ujumbe...</div><form id="groupMessageForm" class="chat-compose chat-compose-media"><textarea id="groupMessageText" rows="2" placeholder="Andika ujumbe kwa wanachama wote..." aria-label="Ujumbe kwa wote"></textarea><div class="chat-media-tools"><label class="chat-attach">📷 Picha<input id="groupImageFile" type="file" accept="image/*" hidden></label><button type="button" id="groupRecordBtn" class="secondary">🎙️ Rekodi sauti</button><span id="groupMediaStatus" class="chat-media-status"></span><button type="submit">➤ Tuma kwa wote</button></div></form></section>
 <div class="chat-social-grid"><section><h3>📨 Maombi ya urafiki yaliyokufikia</h3><div id="chatIncoming" class="grid"></div></section><section><h3>🤝 Marafiki</h3><div id="chatFriends" class="grid"></div></section></div><div id="chatStatus" class="msg hidden"></div></section><section class="panel page-section hidden" data-page="calculator" id="calculator"><h2>🧮 Scientific Calculator</h2><p>Kikokotoo cha kisayansi kwa hesabu za kawaida, trigonometry, log na zaidi.</p><label>Hali ya pembe<select id="calcMode"><option value="deg">DEG (Degrees)</option><option value="rad">RAD (Radians)</option></select></label><input id="calcDisplay" placeholder="Andika hesabu hapa, mfano: 2^3 + sqrt(16)" aria-label="Hesabu" style="font-size:1.3rem;text-align:right"><div class="grid" id="calcButtons" style="grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:12px"></div><div id="calcMsg" class="msg hidden" aria-live="polite"></div><p><small>Unaweza pia kuandika hesabu moja kwa moja. Mifano: sin(30), sqrt(25), log(100), 5!, 2^4.</small></p></section>
 <footer>© EDUCATIONAL MATERIALS · Tanzania</footer></div></div></div></main>
 <script>
@@ -644,25 +646,88 @@ async function selectChatMember(id,people){
  await loadDirectMessages();
  $('directChatPanel').scrollIntoView({behavior:'smooth',block:'start'});
 }
+let directRecordedAudio=null,groupRecordedAudio=null;
+async function uploadChatMedia(file){
+ if(!file||!currentUser)throw new Error('Chagua faili kwanza.');
+ const isImage=file.type.startsWith('image/'),isAudio=file.type.startsWith('audio/');
+ if(!isImage&&!isAudio)throw new Error('Tuma picha au sauti pekee.');
+ const max=isImage?5*1024*1024:8*1024*1024;
+ if(file.size>max)throw new Error(isImage?'Picha izidi MB 5.':'Sauti izidi MB 8.');
+ const ext=(file.name&&file.name.includes('.')?file.name.split('.').pop():((file.type.split('/')[1]||'webm').split(';')[0])).toLowerCase().replace(/[^a-z0-9]/g,'')||'bin';
+ const path=currentUser.id+'/'+crypto.randomUUID()+'.'+ext;
+ const {error}=await db.storage.from('chat-media').upload(path,file,{contentType:file.type,upsert:false});
+ if(error)throw error;
+ return {media_path:path,media_type:isImage?'image':'audio'};
+}
+async function renderChatMessages(target,rows,nameFor){
+ const html=await Promise.all((rows||[]).map(async m=>{
+  let media='';
+  if(m.media_path){
+   const {data}=await db.storage.from('chat-media').createSignedUrl(m.media_path,3600);
+   if(data?.signedUrl)media=m.media_type==='image'?'<img class="chat-media-image" src="'+data.signedUrl+'" alt="Picha iliyotumwa" loading="lazy">':'<audio class="chat-media-audio" controls preload="none" src="'+data.signedUrl+'"></audio>';
+   else media='<small>Faili haipatikani au imekwisha muda wake.</small>';
+  }
+  const body=m.body?'<span>'+chatSafe(m.body)+'</span>':'';
+  return '<p class="chat-bubble '+(m.sender_id===currentUser.id?'chat-mine':'chat-theirs')+'"><b>'+chatSafe(nameFor(m))+':</b>'+body+media+'<small>'+new Date(m.created_at).toLocaleTimeString('sw-TZ',{hour:'2-digit',minute:'2-digit'})+'</small></p>';
+ }));
+ $(target).innerHTML=html.length?html.join(''):'Bado hakuna ujumbe.';
+ $(target).scrollTop=$(target).scrollHeight;
+}
 async function loadDirectMessages(){
  if(!selectedChatMember||!currentUser)return;
  const other=selectedChatMember.id;
- const {data,error}=await db.from('direct_messages').select('id,sender_id,receiver_id,body,created_at').or('and(sender_id.eq.'+currentUser.id+',receiver_id.eq.'+other+'),and(sender_id.eq.'+other+',receiver_id.eq.'+currentUser.id+')').order('created_at',{ascending:true}).limit(200);
+ const {data,error}=await db.from('direct_messages').select('id,sender_id,receiver_id,body,media_path,media_type,created_at').or('and(sender_id.eq.'+currentUser.id+',receiver_id.eq.'+other+'),and(sender_id.eq.'+other+',receiver_id.eq.'+currentUser.id+')').order('created_at',{ascending:true}).limit(200);
  if(error){$('directMessages').textContent='Hitilafu ya ujumbe: '+error.message;return;}
- $('directMessages').innerHTML=(data||[]).length?(data||[]).map(m=>'<p class="chat-bubble '+(m.sender_id===currentUser.id?'chat-mine':'chat-theirs')+'"><b>'+(m.sender_id===currentUser.id?'Mimi':chatSafe(selectedChatMember.full_name))+':</b> '+chatSafe(m.body)+'<small>'+new Date(m.created_at).toLocaleTimeString('sw-TZ',{hour:'2-digit',minute:'2-digit'})+'</small></p>').join(''):'Bado hamjabadilishana ujumbe.';
- $('directMessages').scrollTop=$('directMessages').scrollHeight;
+ await renderChatMessages('directMessages',data,m=>m.sender_id===currentUser.id?'Mimi':selectedChatMember.full_name||'Mwanachama');
 }
-$('directMessageForm').onsubmit=async e=>{e.preventDefault();if(!selectedChatMember){chatStatus('Chagua mwanachama kwanza.',true);return;}const body=$('directMessageText').value.trim();if(!body)return;const {error}=await db.from('direct_messages').insert({sender_id:currentUser.id,receiver_id:selectedChatMember.id,body});if(error){chatStatus('Ujumbe haukutumwa: '+error.message,true);return;}$('directMessageText').value='';await loadDirectMessages();chatStatus('Ujumbe umetumwa.');};
+async function sendChatMessage(table,body,file,otherId){
+ if(!body&&!file)throw new Error('Andika ujumbe au chagua picha/sauti.');
+ let media={media_path:null,media_type:null};
+ if(file)media=await uploadChatMedia(file);
+ const row={sender_id:currentUser.id,body:body||null,...media};
+ if(table==='direct_messages')row.receiver_id=otherId;
+ const {error}=await db.from(table).insert(row);
+ if(error){if(media.media_path)await db.storage.from('chat-media').remove([media.media_path]);throw error;}
+}
+function setupChatRecorder(buttonId,statusId,setBlob){
+ const btn=$(buttonId),status=$(statusId);let recorder=null,stream=null,chunks=[];
+ if(!btn)return;
+ btn.onclick=async()=>{
+  if(recorder&&recorder.state==='recording'){recorder.stop();btn.textContent='🎙️ Rekodi tena';return;}
+  try{
+   if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder)throw new Error('Kivinjari hiki hakiruhusu kurekodi sauti.');
+   stream=await navigator.mediaDevices.getUserMedia({audio:true});
+   const mime=['audio/webm;codecs=opus','audio/webm','audio/mp4'].find(t=>MediaRecorder.isTypeSupported(t));
+   recorder=new MediaRecorder(stream,mime?{mimeType:mime}:undefined);chunks=[];
+   recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data);};
+   recorder.onstop=()=>{const blob=new Blob(chunks,{type:recorder.mimeType||'audio/webm'});setBlob(new File([blob],'voice-message.'+((blob.type.split('/')[1]||'webm').split(';')[0]),{type:blob.type}));status.textContent='Sauti iko tayari kutumwa.';stream?.getTracks().forEach(t=>t.stop());btn.textContent='🎙️ Rekodi tena';};
+   recorder.start();btn.textContent='⏹️ Simamisha';status.textContent='Inarekodi...';
+  }catch(err){status.textContent=err.message||'Imeshindikana kurekodi sauti.';}
+ };
+}
+setupChatRecorder('directRecordBtn','directMediaStatus',v=>{directRecordedAudio=v;});
+setupChatRecorder('groupRecordBtn','groupMediaStatus',v=>{groupRecordedAudio=v;});
+$('directImageFile').onchange=()=>{$('directMediaStatus').textContent=$('directImageFile').files[0]?.name||'';directRecordedAudio=null;};
+$('groupImageFile').onchange=()=>{$('groupMediaStatus').textContent=$('groupImageFile').files[0]?.name||'';groupRecordedAudio=null;};
+$('directMessageForm').onsubmit=async e=>{
+ e.preventDefault();if(!selectedChatMember){chatStatus('Chagua mwanachama kwanza.',true);return;}
+ const body=$('directMessageText').value.trim(),file=$('directImageFile').files[0]||directRecordedAudio;
+ try{await sendChatMessage('direct_messages',body,file,selectedChatMember.id);$('directMessageText').value='';$('directImageFile').value='';directRecordedAudio=null;$('directMediaStatus').textContent='';await loadDirectMessages();chatStatus('Ujumbe umetumwa.');}
+ catch(err){chatStatus('Ujumbe haukutumwa: '+(err.message||err),true);}
+};
 async function loadGroupMessages(){
  if(!currentUser)return;$('groupMessages').textContent='Inapakia ujumbe...';
- const {data,error}=await db.from('group_messages').select('id,sender_id,body,created_at').order('created_at',{ascending:true}).limit(200);
+ const {data,error}=await db.from('group_messages').select('id,sender_id,body,media_path,media_type,created_at').order('created_at',{ascending:true}).limit(200);
  if(error){$('groupMessages').textContent='Imeshindikana kupakia ujumbe: '+error.message;return;}
  const ids=[...new Set((data||[]).map(m=>m.sender_id))];let names={};
  if(ids.length){const people=await db.from('member_directory').select('id,full_name').in('id',ids);(people.data||[]).forEach(p=>names[p.id]=p.full_name);}
- $('groupMessages').innerHTML=(data||[]).length?(data||[]).map(m=>'<p class="chat-bubble '+(m.sender_id===currentUser.id?'chat-mine':'chat-theirs')+'"><b>'+chatSafe(names[m.sender_id]||(m.sender_id===currentUser.id?'Mimi':'Mwanachama'))+':</b> '+chatSafe(m.body)+'<small>'+new Date(m.created_at).toLocaleTimeString('sw-TZ',{hour:'2-digit',minute:'2-digit'})+'</small></p>').join(''):'Bado hakuna ujumbe. Kuwa wa kwanza kuandika!';
- $('groupMessages').scrollTop=$('groupMessages').scrollHeight;
+ await renderChatMessages('groupMessages',data,m=>names[m.sender_id]||(m.sender_id===currentUser.id?'Mimi':'Mwanachama'));
 }
-$('groupMessageForm').onsubmit=async e=>{e.preventDefault();const body=$('groupMessageText').value.trim();if(!body)return;const {error}=await db.from('group_messages').insert({sender_id:currentUser.id,body});if(error){chatStatus('Ujumbe wa wote haukutumwa: '+error.message,true);return;}$('groupMessageText').value='';await loadGroupMessages();chatStatus('Ujumbe umetumwa kwa wanachama wote.');};
+$('groupMessageForm').onsubmit=async e=>{
+ e.preventDefault();const body=$('groupMessageText').value.trim(),file=$('groupImageFile').files[0]||groupRecordedAudio;
+ try{await sendChatMessage('group_messages',body,file,null);$('groupMessageText').value='';$('groupImageFile').value='';groupRecordedAudio=null;$('groupMediaStatus').textContent='';await loadGroupMessages();chatStatus('Ujumbe umetumwa kwa wanachama wote.');}
+ catch(err){chatStatus('Ujumbe wa wote haukutumwa: '+(err.message||err),true);}
+};
 let chatPollTimer=null,chatNoticeCount=0,chatNoticeWatermark=null;
 function showChatNotice(message){
  const el=$('chatNotice');if(!el)return;
