@@ -67,7 +67,8 @@ small{color:#617184}
 @media(max-width:760px){.calendar-day{min-height:68px;padding:5px 3px}.calendar-day-event{font-size:.58rem;padding:3px}.calendar-weekday{font-size:.68rem}.calendar-month-grid,.calendar-weekdays{gap:3px}.dashboard-stats,.admin-overview{grid-template-columns:repeat(2,minmax(0,1fr))}.dashboard-stat{padding:12px}.dashboard-stat strong{font-size:1.35rem}}
 @media(max-width:390px){.calendar-day{min-height:58px}.calendar-day-number{font-size:.78rem}.calendar-day-event{font-size:.52rem}.calendar-toolbar h3{font-size:.95rem}}
 
-</style></head><body>
+</style><script src="https://cdn.jsdelivr.net/npm/mathjs@14.8.1/lib/browser/math.js"></script>
+</head><body>
 <header><div class="header-top"><div class="brand"><img class="brand-logo" src="logo-small.jpg" alt="EDUCATIONAL MATERIALS logo">EDUCATIONAL MATERIALS</div></div><div>Maktaba ya vitabu na mitihani kwa wanafunzi wa Tanzania</div></header>
 <main>
 <section class="panel" id="account"><h2>Akaunti yako</h2><div id="signedout"><div class="row"><label>Barua pepe<input id="email" type="email" autocomplete="email" required></label><label>Nywila<input id="password" type="password" autocomplete="current-password" minlength="6" required></label></div><div class="row"><button id="login">Ingia</button><button class="secondary" id="signup">Fungua akaunti</button></div></div><div id="signedin" class="hidden"><p id="who"></p><button class="secondary" id="logout">Toka</button></div><div id="authmsg" aria-live="polite"></div></section>
@@ -88,6 +89,7 @@ small{color:#617184}
 <button class="nav-item" data-target="booksearch" type="button">🔎 Tafuta Vitabu Mtandaoni</button>
 <button class="nav-item" data-target="educationcalendar" type="button">📅 Kalenda ya Elimu</button>
 <button class="nav-item" data-target="tutor" type="button">👩🏽‍🏫 Mwalimu wa Masomo</button>
+<button class="nav-item" data-target="calculator" type="button">🧮 Scientific Calculator</button>
 <button class="nav-item" data-target="account" type="button">👤 Akaunti Yangu</button>
 <button class="nav-item admin-nav" data-target="admin" type="button">⚙️ Usimamizi wa Admin</button>
 </aside>
@@ -163,6 +165,7 @@ small{color:#617184}
 <button id="asktutor">Uliza mwalimu</button>
 <div id="tutoranswer" class="msg hidden" aria-live="polite"></div>
 </section>
+<section class="panel page-section hidden" data-page="calculator" id="calculator"><h2>🧮 Scientific Calculator</h2><p>Kikokotoo cha kisayansi kwa hesabu za kawaida, trigonometry, log na zaidi.</p><label>Hali ya pembe<select id="calcMode"><option value="deg">DEG (Degrees)</option><option value="rad">RAD (Radians)</option></select></label><input id="calcDisplay" placeholder="Andika hesabu hapa, mfano: 2^3 + sqrt(16)" aria-label="Hesabu" style="font-size:1.3rem;text-align:right"><div class="grid" id="calcButtons" style="grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:12px"></div><div id="calcMsg" class="msg hidden" aria-live="polite"></div><p><small>Unaweza pia kuandika hesabu moja kwa moja. Mifano: sin(30), sqrt(25), log(100), 5!, 2^4.</small></p></section>
 <footer>© EDUCATIONAL MATERIALS · Tanzania</footer></div></div></div></main>
 <script>
 const SUPABASE_URL="https://wntxumyzbenrefqehsax.supabase.co";
@@ -175,7 +178,7 @@ function toggleSidebar(){const sidebar=$('sidebar'),layout=document.querySelecto
 $('menuToggle')?.addEventListener('click',toggleSidebar);
 $('sidebarBackdrop')?.addEventListener('click',closeSidebar);
 function showPage(page,kindValue){
- const allowed=new Set(['dashboard','booksearch','educationcalendar','tutor','admin']);
+ const allowed=new Set(['dashboard','booksearch','educationcalendar','tutor','calculator','admin']);
  if(!allowed.has(page))page='dashboard';
  document.querySelectorAll('.page-section').forEach(el=>{
   const visible=el.dataset.page===page;
@@ -569,6 +572,15 @@ async function loadPayments(){if(!isAdmin)return;$('resourceform').classList.add
  document.querySelectorAll('[data-approve]').forEach(b=>b.onclick=()=>reviewPayment(b.dataset.approve,'approved'));document.querySelectorAll('[data-reject]').forEach(b=>b.onclick=()=>reviewPayment(b.dataset.reject,'rejected'));
 }
 async function reviewPayment(id,status){const {error}=await db.from('payment_submissions').update({status,reviewed_by:currentUser.id,reviewed_at:new Date().toISOString()}).eq('id',id);if(error)message('adminmsg','Imeshindikana: '+error.message,true);else{message('adminmsg',status==='approved'?'Malipo yameidhinishwa.':'Ombi limekataliwa.');await loadPayments()}}
+
+// Scientific calculator
+(function(){
+ const display=$('calcDisplay'),grid=$('calcButtons'),mode=$('calcMode'),msg=$('calcMsg');
+ if(!display||!grid)return;
+ const keys=['7','8','9','÷','4','5','6','×','1','2','3','−','0','.','(',')','sin','cos','tan','√','log','ln','π','^','!','AC','DEL','=','+'];
+ keys.forEach(k=>{const b=document.createElement('button');b.textContent=k;b.type='button';if(['AC','DEL','='].includes(k))b.className=k==='AC'?'danger':k==='='?'':'secondary';b.onclick=()=>{if(k==='AC'){display.value='';msg.classList.add('hidden');return}if(k==='DEL'){display.value=display.value.slice(0,-1);return}if(k==='='){try{let expr=display.value.replace(/÷/g,'/').replace(/×/g,'*').replace(/−/g,'-').replace(/√/g,'sqrt').replace(/π/g,'pi').replace(/\b( sin|cos|tan)\b/g,'$1');const scope={};if(mode.value==='deg'){scope.sin=x=>Math.sin(x*Math.PI/180);scope.cos=x=>Math.cos(x*Math.PI/180);scope.tan=x=>Math.tan(x*Math.PI/180)}const result=window.math.evaluate(expr,scope);display.value=String(result);msg.textContent='';msg.classList.add('hidden')}catch(e){msg.textContent='Hesabu haijatambulika. Angalia ulivyoandika.';msg.classList.remove('hidden');msg.className='msg error'}return}const insert={'÷':'/','×':'*','−':'-','√':'sqrt(','sin':'sin(','cos':'cos(','tan':'tan(','log':'log10(','ln':'log(','π':'pi','!':'!'}[k]||k;display.value+=insert;display.focus()};grid.appendChild(b)});
+})();
+
 loadEducationCalendar();
 refreshSession();
 </script></body></html>
