@@ -202,7 +202,7 @@ document.querySelectorAll('.nav-item').forEach(btn=>btn.addEventListener('click'
  if(target==='catalog'){showPage('dashboard',btn.dataset.kind||'');}
  else if(target==='dashboard'){showPage('dashboard','');}
  else if(target==='account'){$('account').scrollIntoView({behavior:'smooth',block:'start'});}
- else {showPage(target);if(target==='educhat')loadChatSocial();}
+ else {showPage(target);if(target==='educhat'){loadChatMembers();loadChatSocial();loadGroupMessages();}}
  closeSidebar();
 }));
 showPage('dashboard','');
@@ -610,9 +610,11 @@ async function loadDirectMessages(){
 $('directMessageForm').onsubmit=async e=>{e.preventDefault();if(!selectedChatMember){chatStatus('Chagua mwanachama kwanza.',true);return;}const body=$('directMessageText').value.trim();if(!body)return;const {error}=await db.from('direct_messages').insert({sender_id:currentUser.id,receiver_id:selectedChatMember.id,body});if(error){chatStatus('Ujumbe haukutumwa: '+error.message,true);return;}$('directMessageText').value='';await loadDirectMessages();chatStatus('Ujumbe umetumwa.');};
 async function loadGroupMessages(){
  if(!currentUser)return;$('groupMessages').textContent='Inapakia ujumbe...';
- const {data,error}=await db.from('group_messages').select('id,sender_id,body,created_at,profiles:sender_id(full_name)').order('created_at',{ascending:true}).limit(200);
+ const {data,error}=await db.from('group_messages').select('id,sender_id,body,created_at').order('created_at',{ascending:true}).limit(200);
  if(error){$('groupMessages').textContent='Imeshindikana kupakia ujumbe: '+error.message;return;}
- $('groupMessages').innerHTML=(data||[]).length?(data||[]).map(m=>'<p><b>'+chatSafe(m.profiles?.full_name||(m.sender_id===currentUser.id?'Mimi':'Mwanachama'))+':</b> '+chatSafe(m.body)+'<br><small>'+new Date(m.created_at).toLocaleString('sw-TZ')+'</small></p>').join(''):'Bado hakuna ujumbe. Kuwa wa kwanza kuandika!';
+ const ids=[...new Set((data||[]).map(m=>m.sender_id))];let names={};
+ if(ids.length){const people=await db.from('member_directory').select('id,full_name').in('id',ids);(people.data||[]).forEach(p=>names[p.id]=p.full_name);}
+ $('groupMessages').innerHTML=(data||[]).length?(data||[]).map(m=>'<p><b>'+chatSafe(names[m.sender_id]||(m.sender_id===currentUser.id?'Mimi':'Mwanachama'))+':</b> '+chatSafe(m.body)+'<br><small>'+new Date(m.created_at).toLocaleString('sw-TZ')+'</small></p>').join(''):'Bado hakuna ujumbe. Kuwa wa kwanza kuandika!';
  $('groupMessages').scrollTop=$('groupMessages').scrollHeight;
 }
 $('groupMessageForm').onsubmit=async e=>{e.preventDefault();const body=$('groupMessageText').value.trim();if(!body)return;const {error}=await db.from('group_messages').insert({sender_id:currentUser.id,body});if(error){chatStatus('Ujumbe wa wote haukutumwa: '+error.message,true);return;}$('groupMessageText').value='';await loadGroupMessages();chatStatus('Ujumbe umetumwa kwa wanachama wote.');};
