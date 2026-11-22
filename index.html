@@ -196,7 +196,7 @@ document.querySelectorAll('.nav-item').forEach(btn=>btn.addEventListener('click'
  if(target==='catalog'){showPage('dashboard',btn.dataset.kind||'');}
  else if(target==='dashboard'){showPage('dashboard','');}
  else if(target==='account'){$('account').scrollIntoView({behavior:'smooth',block:'start'});}
- else {showPage(target);}
+ else {showPage(target);if(target==='educhat')loadChatSocial();}
  closeSidebar();
 }));
 showPage('dashboard','');
