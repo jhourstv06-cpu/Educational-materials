@@ -84,6 +84,7 @@ small{color:#617184}
 .chat-member-info{min-width:0;display:flex;flex-direction:column;gap:2px}
 .chat-member-info strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .chat-member-info small{font-size:.76rem}
+.chat-presence{font-weight:700;font-size:.72rem}.chat-presence.online{color:#16834a}.chat-presence.offline{color:#8492a3}
 .chat-conversation{display:flex;flex-direction:column;min-width:0;background:#f5f8fb}
 .chat-conversation-head{display:flex;align-items:center;gap:12px;padding:14px 17px;background:#fff;border-bottom:1px solid #e0e8f0}
 .chat-conversation-head h3{margin:0 0 3px;color:#123d63}
@@ -509,8 +510,8 @@ async function updateAccount(){
 }
 $('login').onclick=async()=>{clearMsg('authmsg');if(!db){message('authmsg','Huduma ya kuingia haijapakia. Angalia intaneti, kisha onyesha upya ukurasa.',true);return;}const email=$('email').value.trim(),password=$('password').value;if(!email||!password){message('authmsg','Jaza barua pepe na nenosiri kwanza.',true);return;}const btn=$('login');btn.disabled=true;btn.textContent='Inaingia...';message('authmsg','Inaunganisha na mfumo...',false);try{const {error}=await db.auth.signInWithPassword({email,password});if(error)message('authmsg','Imeshindikana kuingia: '+error.message,true);else{await refreshSession();message('authmsg','Umeingia kikamilifu.',false)}}catch(err){message('authmsg','Hitilafu ya muunganisho: '+(err?.message||'Jaribu tena.'),true)}finally{btn.disabled=false;btn.textContent='Ingia'}};
 $('signup').onclick=async()=>{clearMsg('authmsg');if(!db){message('authmsg','Huduma ya kuingia haijapakia. Angalia intaneti, kisha jaribu tena.',true);return;}try{const {data,error}=await db.auth.signUp({email:$('email').value.trim(),password:$('password').value,options:{emailRedirectTo:'https://jhourstv06-cpu.github.io/Educational-materials/'}});if(error)message('authmsg',error.message,true);else if(data.session){await refreshSession();message('authmsg','Akaunti imefunguliwa na umeingia.')}else message('authmsg','Akaunti imeundwa. Angalia barua pepe yako kuthibitisha usajili kabla ya kuingia.');}catch(err){message('authmsg','Hitilafu ya muunganisho: '+(err?.message||'Jaribu tena.'),true)}};
-$('logout').onclick=async()=>{await db.auth.signOut();currentUser=null;if(chatPollTimer)clearInterval(chatPollTimer);chatNoticeCount=0;updateChatUnreadBadge();await updateAccount();await loadResources()};
-if(db)db.auth.onAuthStateChange((_event,session)=>{currentUser=session?.user||null;startChatNotifications();setTimeout(async()=>{await updateAccount();await loadResources()},0)});
+$('logout').onclick=async()=>{await db.auth.signOut();currentUser=null;if(chatPollTimer)clearInterval(chatPollTimer);if(chatPresenceTimer)clearInterval(chatPresenceTimer);chatPresenceTimer=null;chatNoticeCount=0;updateChatUnreadBadge();await updateAccount();await loadResources()};
+if(db)db.auth.onAuthStateChange((_event,session)=>{currentUser=session?.user||null;startChatNotifications();if(!currentUser&&chatPresenceTimer){clearInterval(chatPresenceTimer);chatPresenceTimer=null;}else if(currentUser)startChatPresence();setTimeout(async()=>{await updateAccount();await loadResources()},0)});
 async function loadResources(){
  if(!currentUser){
   resources=[];
@@ -620,6 +621,10 @@ async function reviewPayment(id,status){const {error}=await db.from('payment_sub
 
 // EDU CHAT: member directory, direct messages and public group
 let selectedChatMember=null;
+let chatPresenceMap={},chatPresenceTimer=null;
+function isChatOnline(person){const seen=person?.last_seen_at?new Date(person.last_seen_at).getTime():0;return !!seen&&(Date.now()-seen)<120000;}
+async function updateMyChatPresence(){if(!currentUser)return;const {error}=await db.from('member_presence').upsert({user_id:currentUser.id,last_seen_at:new Date().toISOString()},{onConflict:'user_id'});if(error)console.warn('Presence:',error.message);}
+function startChatPresence(){if(chatPresenceTimer)clearInterval(chatPresenceTimer);if(!currentUser)return;updateMyChatPresence();chatPresenceTimer=setInterval(()=>{if(currentUser)updateMyChatPresence();},45000);}
 function chatStatus(t,error=false){const el=$('chatStatus');if(el){el.textContent=t;el.className='msg '+(error?'error':'success');el.classList.remove('hidden');}}
 function chatSafe(v){return esc(v||'');}
 async function loadChatMembers(){
@@ -628,12 +633,14 @@ async function loadChatMembers(){
  const {data,error}=await db.from('member_directory').select('id,full_name,role').neq('id',currentUser.id).order('full_name',{ascending:true}).limit(500);
  if(error){$('chatSearchResults').textContent='Imeshindikana kupata majina: '+error.message;return;}
  const people=data||[];
- const draw=()=>{const q=$('chatSearch').value.trim().toLocaleLowerCase();const rows=people.filter(p=>(p.full_name||'').toLocaleLowerCase().includes(q));$('chatSearchResults').innerHTML=rows.length?rows.map(p=>{const name=p.full_name||'Mwanachama';const initials=name.trim().split(/\\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase();return '<button type="button" class="chat-member" data-chat-person="'+p.id+'"><span class="chat-avatar">'+chatSafe(initials||'M')+'</span><span class="chat-member-info"><strong>'+chatSafe(name)+'</strong><small>'+(p.role==='admin'?'Mwalimu / Admin':'Mwanafunzi')+'</small></span></button>';}).join(''):'Hakuna majina yanayolingana. Hakikisha wanachama wameweka majina kwenye akaunti zao.';document.querySelectorAll('[data-chat-person]').forEach(b=>b.onclick=()=>selectChatMember(b.dataset.chatPerson,people));};
+ const presence=await db.from('member_presence').select('user_id,last_seen_at').in('user_id',people.map(p=>p.id));
+ chatPresenceMap={};(presence.data||[]).forEach(p=>chatPresenceMap[p.user_id]=p.last_seen_at);
+ const draw=()=>{const q=$('chatSearch').value.trim().toLocaleLowerCase();const rows=people.filter(p=>(p.full_name||'').toLocaleLowerCase().includes(q));$('chatSearchResults').innerHTML=rows.length?rows.map(p=>{const name=p.full_name||'Mwanachama';const initials=name.trim().split(/\\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase();const seen=chatPresenceMap[p.id]?new Date(chatPresenceMap[p.id]).getTime():0;const online=!!seen&&(Date.now()-seen)<120000;return '<button type="button" class="chat-member" data-chat-person="'+p.id+'"><span class="chat-avatar">'+chatSafe(initials||'M')+'</span><span class="chat-member-info"><strong>'+chatSafe(name)+'</strong><small>'+(p.role==='admin'?'Mwalimu / Admin':'Mwanafunzi')+' · <span class="chat-presence '+(online?'online':'offline')+'">'+(online?'● Online':'○ Offline')+'</span></small></span></button>';}).join(''):'Hakuna majina yanayolingana. Hakikisha wanachama wameweka majina kwenye akaunti zao.';document.querySelectorAll('[data-chat-person]').forEach(b=>b.onclick=()=>selectChatMember(b.dataset.chatPerson,people));};
  draw();$('chatSearch').oninput=draw;
 }
 async function selectChatMember(id,people){
  selectedChatMember=people.find(p=>p.id===id);if(!selectedChatMember)return;
- $('directChatTitle').textContent='Mazungumzo na '+(selectedChatMember.full_name||'Mwanachama');
+ $('directChatTitle').textContent='Mazungumzo na '+(selectedChatMember.full_name||'Mwanachama')+' · '+(isChatOnline({last_seen_at:chatPresenceMap[selectedChatMember.id]})?'Online':'Offline');
  await loadDirectMessages();
  $('directChatPanel').scrollIntoView({behavior:'smooth',block:'start'});
 }
