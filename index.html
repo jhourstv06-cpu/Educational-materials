@@ -765,7 +765,7 @@ async function pollChatNotifications(){
    clearChatUnread();return;
   }
   chatNoticeCount+=found.length;updateChatUnreadBadge();
-  showChatNotice(found.length===1?'Ujumbe mpya '+(latest.kind==='binafsi'?'binafsi':'kwenye ukumbi wa wote')+': '+latest.body:(found.length+' ujumbe mpya umefika.'));
+  showChatNotice(found.length===1?'Ujumbe mpya '+(latest.kind==='binafsi'?'binafsi':'kwenye ukumbi wa wote')+': '+(latest.body||'Picha au sauti mpya'):(found.length+' ujumbe mpya umefika.'));
  }
 }
 function startChatNotifications(){
