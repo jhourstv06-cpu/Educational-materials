@@ -461,7 +461,7 @@ $('calendaryear').addEventListener('change',()=>{calendarViewMonth=0;loadEducati
 $('calendarPrev').addEventListener('click',()=>{if(calendarViewMonth===0){const y=Number($('calendaryear').value)-1;if(y<2026)return;$('calendaryear').value=String(y);calendarViewMonth=11;}else calendarViewMonth--;loadEducationCalendar();});
 $('calendarNext').addEventListener('click',()=>{if(calendarViewMonth===11){const y=Number($('calendaryear').value)+1;if(y>2027)return;$('calendaryear').value=String(y);calendarViewMonth=0;}else calendarViewMonth++;loadEducationCalendar();});
 $('dashboardOpenCalendar').addEventListener('click',()=>{showPage('educationcalendar');document.querySelectorAll('.nav-item').forEach(x=>x.classList.toggle('active',x.dataset.target==='educationcalendar'));loadEducationCalendar();});
-async function refreshSession(){if(!db){message('authmsg','Huduma ya kuingia haijapakia. Angalia intaneti au jaribu tena baada ya kufungua ukurasa upya.',true);return}const {data}=await db.auth.getSession();currentUser=data.session?.user||null;await updateAccount();await loadResources()}
+async function refreshSession(){if(!db){message('authmsg','Huduma ya kuingia haijapakia. Angalia intaneti au jaribu tena baada ya kufungua ukurasa upya.',true);return}const {data}=await db.auth.getSession();currentUser=data.session?.user||null;startChatNotifications();await updateAccount();await loadResources()}
 async function updateAccount(){
  $('signedout').classList.toggle('hidden',!!currentUser);$('signedin').classList.toggle('hidden',!currentUser);
  $('who').textContent=currentUser?'Umeingia: '+currentUser.email:'';isAdmin=false;
@@ -652,9 +652,9 @@ async function pollChatNotifications(){
   const latest=found[found.length-1];
   const onChat=!$('educhat')?.classList.contains('hidden');
   if(onChat){
-   if(latest.kind==='binafsi'&&selectedChatMember?.id===latest.sender_id)await loadDirectMessages();
-   if(latest.kind==='wote')await loadGroupMessages();
-   if(onChat){clearChatUnread();return;}
+   if((dm.data||[]).length&&selectedChatMember)await loadDirectMessages();
+   if((gm.data||[]).length)await loadGroupMessages();
+   clearChatUnread();return;
   }
   chatNoticeCount+=found.length;updateChatUnreadBadge();
   showChatNotice(found.length===1?'Ujumbe mpya '+(latest.kind==='binafsi'?'binafsi':'kwenye ukumbi wa wote')+': '+latest.body:(found.length+' ujumbe mpya umefika.'));
