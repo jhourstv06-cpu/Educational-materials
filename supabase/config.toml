@@ -1,0 +1,2 @@
+[functions.cleanup-chat]
+verify_jwt = false
