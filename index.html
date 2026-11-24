@@ -69,8 +69,19 @@ small{color:#617184}
 @media(max-width:390px){.calendar-day{min-height:58px}.calendar-day-number{font-size:.78rem}.calendar-day-event{font-size:.52rem}.calendar-toolbar h3{font-size:.95rem}}
 
 
-/* EDU CHAT: mpangilio wa WhatsApp Web */
-.chat-shell{display:grid;grid-template-columns:minmax(245px,32%) minmax(0,1fr);gap:0;min-height:480px;border:1px solid #d6e1eb;border-radius:16px;overflow:hidden;background:#fff;margin:16px 0}
+/* EDU CHAT: mwonekano wa ukurasa mmoja kama WhatsApp */
+.chat-shell{display:block;min-height:420px;border:1px solid #d6e1eb;border-radius:16px;overflow:hidden;background:#fff;margin:16px 0}
+.chat-shell .chat-conversation{display:none}
+.chat-shell.chat-conversation-open .chat-contacts{display:none}
+.chat-shell.chat-conversation-open .chat-conversation{display:flex}
+#educhat:not(.group-chat-open) #publicChatPanel{display:none}
+#educhat.group-chat-open .chat-shell{display:none}
+#educhat.group-chat-open #publicChatPanel{display:block}
+#educhat .chat-social-grid{display:none}
+.chat-back-btn{width:auto;min-width:42px;flex:0 0 auto;padding:9px 13px;background:#e9f3fc;color:#145b91}
+.chat-open-group{margin-top:10px;width:100%;text-align:left;background:#e9f3fc;color:#145b91;border:1px solid #d6e1eb;padding:12px}
+.chat-contacts{border-right:0;border-bottom:0}
+.chat-member-list{max-height:65vh;min-height:120px}
 .chat-contacts{background:#f7f9fc;border-right:1px solid #dce5ef;padding:14px;min-width:0}
 .chat-contacts-head,.chat-group-heading{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .chat-contacts-head h3,.chat-group-heading h3{margin:4px 0 12px;color:#123d63}
@@ -209,10 +220,10 @@ small{color:#617184}
 <section class="panel page-section hidden" data-page="educhat" id="educhat">
 <h2>💬 EDU CHAT</h2><p>Wasiliana na walimu, wanafunzi na marafiki wako kwa urahisi.</p>
 <div class="chat-shell">
- <aside class="chat-contacts"><div class="chat-contacts-head"><h3>👥 Wanachama</h3><button id="chatReloadBtn" type="button" class="secondary">↻</button></div><input id="chatSearch" placeholder="Tafuta mwanachama..."><div id="chatSearchResults" class="chat-member-list">Inapakia majina...</div></aside>
- <section class="chat-conversation" id="directChatPanel"><div class="chat-conversation-head"><div class="chat-avatar chat-avatar-large">ED</div><div><h3 id="directChatTitle">Karibu EDU CHAT</h3><small>Chagua jina upande wa kushoto kuanza mazungumzo</small></div></div><div id="directMessages" class="chat-message-area">Hakuna mazungumzo yaliyochaguliwa.</div><form id="directMessageForm" class="chat-compose chat-compose-media"><textarea id="directMessageText" rows="2" placeholder="Andika ujumbe wako..." aria-label="Ujumbe binafsi"></textarea><div class="chat-media-tools"><label class="chat-attach">📷 Picha<input id="directImageFile" type="file" accept="image/*" hidden></label><button type="button" id="directRecordBtn" class="secondary">🎙️ Rekodi sauti</button><span id="directMediaStatus" class="chat-media-status"></span><button type="submit" aria-label="Tuma ujumbe">➤ Tuma</button></div></form></section>
+ <aside class="chat-contacts"><div class="chat-contacts-head"><h3>👥 Wanachama</h3><button id="chatReloadBtn" type="button" class="secondary">↻</button></div><input id="chatSearch" placeholder="Tafuta mwanachama..."><div id="chatSearchResults" class="chat-member-list">Inapakia majina...</div><button id="openGroupChatBtn" type="button" class="chat-open-group">🌍 Ukumbi wa wote</button></aside>
+ <section class="chat-conversation" id="directChatPanel"><div class="chat-conversation-head"><button id="directChatBackBtn" type="button" class="chat-back-btn" aria-label="Rudi kwenye majina">← Rudi</button><div class="chat-avatar chat-avatar-large">👤</div><div><h3 id="directChatTitle">Mazungumzo</h3><small>Ujumbe binafsi</small></div></div><div id="directMessages" class="chat-message-area">Hakuna mazungumzo yaliyochaguliwa.</div><form id="directMessageForm" class="chat-compose chat-compose-media"><textarea id="directMessageText" rows="2" placeholder="Andika ujumbe wako..." aria-label="Ujumbe binafsi"></textarea><div class="chat-media-tools"><label class="chat-attach">📷 Picha<input id="directImageFile" type="file" accept="image/*" hidden></label><button type="button" id="directRecordBtn" class="secondary">🎙️ Rekodi sauti</button><span id="directMediaStatus" class="chat-media-status"></span><button type="submit" aria-label="Tuma ujumbe">➤ Tuma</button></div></form></section>
 </div>
-<section class="panel chat-group-panel" id="publicChatPanel"><div class="chat-group-heading"><h3>🌍 Ukumbi wa wote</h3><button type="button" class="secondary" id="groupReloadBtn">↻ Onyesha ujumbe mpya</button></div><p>Ujumbe unaotumwa hapa unaweza kusomwa na wanachama wote walioingia.</p><div id="groupMessages" class="chat-message-area chat-group-messages">Inapakia ujumbe...</div><form id="groupMessageForm" class="chat-compose chat-compose-media"><textarea id="groupMessageText" rows="2" placeholder="Andika ujumbe kwa wanachama wote..." aria-label="Ujumbe kwa wote"></textarea><div class="chat-media-tools"><label class="chat-attach">📷 Picha<input id="groupImageFile" type="file" accept="image/*" hidden></label><button type="button" id="groupRecordBtn" class="secondary">🎙️ Rekodi sauti</button><span id="groupMediaStatus" class="chat-media-status"></span><button type="submit">➤ Tuma kwa wote</button></div></form></section>
+<section class="panel chat-group-panel" id="publicChatPanel"><div class="chat-group-heading"><button id="groupChatBackBtn" type="button" class="chat-back-btn">← Rudi kwenye majina</button><h3>🌍 Ukumbi wa wote</h3><button type="button" class="secondary" id="groupReloadBtn">↻ Onyesha ujumbe mpya</button></div><p>Ujumbe unaotumwa hapa unaweza kusomwa na wanachama wote walioingia.</p><div id="groupMessages" class="chat-message-area chat-group-messages">Inapakia ujumbe...</div><form id="groupMessageForm" class="chat-compose chat-compose-media"><textarea id="groupMessageText" rows="2" placeholder="Andika ujumbe kwa wanachama wote..." aria-label="Ujumbe kwa wote"></textarea><div class="chat-media-tools"><label class="chat-attach">📷 Picha<input id="groupImageFile" type="file" accept="image/*" hidden></label><button type="button" id="groupRecordBtn" class="secondary">🎙️ Rekodi sauti</button><span id="groupMediaStatus" class="chat-media-status"></span><button type="submit">➤ Tuma kwa wote</button></div></form></section>
 <div class="chat-social-grid"><section><h3>📨 Maombi ya urafiki yaliyokufikia</h3><div id="chatIncoming" class="grid"></div></section><section><h3>🤝 Marafiki</h3><div id="chatFriends" class="grid"></div></section></div><div id="chatStatus" class="msg hidden"></div></section><section class="panel page-section hidden" data-page="calculator" id="calculator"><h2>🧮 Scientific Calculator</h2><p>Kikokotoo cha kisayansi kwa hesabu za kawaida, trigonometry, log na zaidi.</p><label>Hali ya pembe<select id="calcMode"><option value="deg">DEG (Degrees)</option><option value="rad">RAD (Radians)</option></select></label><input id="calcDisplay" placeholder="Andika hesabu hapa, mfano: 2^3 + sqrt(16)" aria-label="Hesabu" style="font-size:1.3rem;text-align:right"><div class="grid" id="calcButtons" style="grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:12px"></div><div id="calcMsg" class="msg hidden" aria-live="polite"></div><p><small>Unaweza pia kuandika hesabu moja kwa moja. Mifano: sin(30), sqrt(25), log(100), 5!, 2^4.</small></p></section>
 <footer>© EDUCATIONAL MATERIALS · Tanzania</footer></div></div></div></main>
 <script>
@@ -228,6 +239,7 @@ $('sidebarBackdrop')?.addEventListener('click',closeSidebar);
 function showPage(page,kindValue){
  const allowed=new Set(['dashboard','booksearch','educationcalendar','tutor','calculator','educhat','admin']);
  if(!allowed.has(page))page='dashboard';
+ if(page==='educhat'){$('educhat')?.classList.remove('group-chat-open');document.querySelector('#educhat .chat-shell')?.classList.remove('chat-conversation-open');selectedChatMember=null;}
  document.querySelectorAll('.page-section').forEach(el=>{
   const visible=el.dataset.page===page;
   el.classList.toggle('hidden',!visible);
@@ -642,10 +654,14 @@ async function loadChatMembers(){
 }
 async function selectChatMember(id,people){
  selectedChatMember=people.find(p=>p.id===id);if(!selectedChatMember)return;
+ $('educhat').classList.remove('group-chat-open');document.querySelector('#educhat .chat-shell')?.classList.add('chat-conversation-open');
  $('directChatTitle').textContent='Mazungumzo na '+(selectedChatMember.full_name||'Mwanachama')+' · '+(isChatOnline({last_seen_at:chatPresenceMap[selectedChatMember.id]})?'Online':'Offline');
  await loadDirectMessages();
  $('directChatPanel').scrollIntoView({behavior:'smooth',block:'start'});
 }
+$('directChatBackBtn').onclick=()=>{selectedChatMember=null;document.querySelector('#educhat .chat-shell')?.classList.remove('chat-conversation-open');};
+$('openGroupChatBtn').onclick=async()=>{$('educhat').classList.add('group-chat-open');await loadGroupMessages();};
+$('groupChatBackBtn').onclick=()=>{$('educhat').classList.remove('group-chat-open');};
 let directRecordedAudio=null,groupRecordedAudio=null;
 async function uploadChatMedia(file){
  if(!file||!currentUser)throw new Error('Chagua faili kwanza.');
