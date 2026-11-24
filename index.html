@@ -128,7 +128,7 @@ small{color:#617184}
 
 
 <div id="appcontent" class="hidden">
-<div class="app-menu-bar"><button id="menuToggle" class="menu-toggle" type="button" aria-label="Fungua menyu" aria-expanded="false">☰</button></div>
+<div class="app-menu-bar"><button id="menuToggle" class="menu-toggle" type="button" aria-label="Fungua menyu" aria-expanded="false">☰</button><button id="backToDashboardBtn" class="secondary hidden" type="button">← Rudi Dashboard</button></div>
 <div class="app-layout">
 <aside id="sidebar" class="sidebar" aria-label="Menyu kuu">
 <div class="sidebar-title">MENYU KUU</div>
@@ -240,6 +240,7 @@ function showPage(page,kindValue){
  const allowed=new Set(['dashboard','booksearch','educationcalendar','tutor','calculator','educhat','admin']);
  if(!allowed.has(page))page='dashboard';
  if(page==='educhat'){$('educhat')?.classList.remove('group-chat-open');document.querySelector('#educhat .chat-shell')?.classList.remove('chat-conversation-open');selectedChatMember=null;}
+ $('backToDashboardBtn')?.classList.toggle('hidden',page==='dashboard');
  document.querySelectorAll('.page-section').forEach(el=>{
   const visible=el.dataset.page===page;
   el.classList.toggle('hidden',!visible);
@@ -249,6 +250,7 @@ function showPage(page,kindValue){
  if(page==='dashboard'&&kindValue!==undefined){$('kind').value=kindValue;render();}
  window.scrollTo({top:0,behavior:'instant'});
 }
+$('backToDashboardBtn')?.addEventListener('click',()=>{document.querySelectorAll('.nav-item').forEach(x=>x.classList.toggle('active',x.dataset.target==='dashboard'));showPage('dashboard','');});
 document.querySelectorAll('.nav-item').forEach(btn=>btn.addEventListener('click',()=>{
  const target=btn.dataset.target;
  document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));btn.classList.add('active');
