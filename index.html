@@ -122,6 +122,7 @@ small{color:#617184}
 
 
 .chat-compose-media{display:block}.chat-media-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px}.chat-attach{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border:1px solid #cbd8e5;border-radius:10px;background:#f4f8fc;color:#145b91;font-weight:700;cursor:pointer}.chat-media-tools button{width:auto;min-width:120px}.chat-media-status{font-size:.78rem;color:#64748b;flex:1;min-width:90px}.chat-media-image{display:block;max-width:min(260px,100%);max-height:260px;object-fit:contain;border-radius:10px;margin-top:7px}.chat-media-audio{display:block;max-width:260px;width:100%;margin-top:7px}
+.chat-delete-message{display:block;margin:7px 0 0 auto!important;min-width:0!important;min-height:28px!important;padding:3px 8px!important;font-size:.72rem!important;border:1px solid #e6b8b8!important;background:#fff5f5!important;color:#a12626!important;border-radius:7px!important;cursor:pointer}.chat-delete-message:disabled{opacity:.6;cursor:wait}
 </style><script src="https://cdn.jsdelivr.net/npm/mathjs@14.8.1/lib/browser/math.js"></script>
 </head><body>
 <header><div class="header-top"><div class="brand"><img class="brand-logo" src="logo-small.jpg" alt="EDUCATIONAL MATERIALS logo">EDUCATIONAL MATERIALS</div></div><div>Maktaba ya vitabu na mitihani kwa wanafunzi wa Tanzania</div></header>
@@ -683,7 +684,7 @@ async function uploadChatMedia(file){
  if(error)throw error;
  return {media_path:path,media_type:isImage?'image':'audio'};
 }
-async function renderChatMessages(target,rows,nameFor){
+async function renderChatMessages(target,rows,nameFor,table){
  const html=await Promise.all((rows||[]).map(async m=>{
   let media='';
   if(m.media_path){
@@ -692,17 +693,39 @@ async function renderChatMessages(target,rows,nameFor){
    else media='<small>Faili haipatikani au imekwisha muda wake.</small>';
   }
   const body=m.body?'<span>'+chatSafe(m.body)+'</span>':'';
-  return '<p class="chat-bubble '+(m.sender_id===currentUser.id?'chat-mine':'chat-theirs')+'"><b>'+chatSafe(nameFor(m))+':</b>'+body+media+'<small>'+new Date(m.created_at).toLocaleTimeString('sw-TZ',{hour:'2-digit',minute:'2-digit'})+'</small></p>';
+  const deleteButton=m.sender_id===currentUser.id?'<button type="button" class="chat-delete-message" data-delete-chat-message="'+chatSafe(m.id)+'" data-chat-table="'+table+'">🗑️ Futa</button>':'';
+  return '<p class="chat-bubble '+(m.sender_id===currentUser.id?'chat-mine':'chat-theirs')+'"><b>'+chatSafe(nameFor(m))+':</b>'+body+media+'<small>'+new Date(m.created_at).toLocaleTimeString('sw-TZ',{hour:'2-digit',minute:'2-digit'})+'</small>'+deleteButton+'</p>';
  }));
- $(target).innerHTML=html.length?html.join(''):'Bado hakuna ujumbe.';
- $(target).scrollTop=$(target).scrollHeight;
+ const container=$(target);
+ container.innerHTML=html.length?html.join(''):'Bado hakuna ujumbe.';
+ container.onclick=async e=>{
+  const btn=e.target.closest('[data-delete-chat-message]');
+  if(!btn)return;
+  if(!confirm('Una uhakika unataka kufuta ujumbe huu?'))return;
+  const id=btn.dataset.deleteChatMessage,tableName=btn.dataset.chatTable;
+  btn.disabled=true;btn.textContent='Inafuta...';
+  try{
+   const row=(rows||[]).find(m=>m.id===id&&m.sender_id===currentUser.id);
+   if(!row)throw new Error('Unaweza kufuta ujumbe wako mwenyewe tu.');
+   if(row.media_path){
+    const {error:storageError}=await db.storage.from('chat-media').remove([row.media_path]);
+    if(storageError)throw storageError;
+   }
+   const {data,error}=await db.from(tableName).delete().eq('id',id).eq('sender_id',currentUser.id).select('id');
+   if(error)throw error;
+   if(!data?.length)throw new Error('Huruhusiwi kufuta ujumbe huu. Kagua ruhusa za kufuta.');
+   if(tableName==='direct_messages')await loadDirectMessages();else await loadGroupMessages();
+   chatStatus('Ujumbe wako umefutwa.');
+  }catch(err){btn.disabled=false;btn.textContent='🗑️ Futa';chatStatus('Imeshindikana kufuta: '+(err.message||err),true);}
+ };
+ container.scrollTop=container.scrollHeight;
 }
 async function loadDirectMessages(){
  if(!selectedChatMember||!currentUser)return;
  const other=selectedChatMember.id;
  const {data,error}=await db.from('direct_messages').select('id,sender_id,receiver_id,body,media_path,media_type,created_at').or('and(sender_id.eq.'+currentUser.id+',receiver_id.eq.'+other+'),and(sender_id.eq.'+other+',receiver_id.eq.'+currentUser.id+')').order('created_at',{ascending:true}).limit(200);
  if(error){$('directMessages').textContent='Hitilafu ya ujumbe: '+error.message;return;}
- await renderChatMessages('directMessages',data,m=>m.sender_id===currentUser.id?'Mimi':selectedChatMember.full_name||'Mwanachama');
+ await renderChatMessages('directMessages',data,m=>m.sender_id===currentUser.id?'Mimi':selectedChatMember.full_name||'Mwanachama','direct_messages');
 }
 async function sendChatMessage(table,body,file,otherId){
  if(!body&&!file)throw new Error('Andika ujumbe au chagua picha/sauti.');
@@ -745,7 +768,7 @@ async function loadGroupMessages(){
  if(error){$('groupMessages').textContent='Imeshindikana kupakia ujumbe: '+error.message;return;}
  const ids=[...new Set((data||[]).map(m=>m.sender_id))];let names={};
  if(ids.length){const people=await db.from('member_directory').select('id,full_name').in('id',ids);(people.data||[]).forEach(p=>names[p.id]=p.full_name);}
- await renderChatMessages('groupMessages',data,m=>names[m.sender_id]||(m.sender_id===currentUser.id?'Mimi':'Mwanachama'));
+ await renderChatMessages('groupMessages',data,m=>names[m.sender_id]||(m.sender_id===currentUser.id?'Mimi':'Mwanachama'),'group_messages');
 }
 $('groupMessageForm').onsubmit=async e=>{
  e.preventDefault();const body=$('groupMessageText').value.trim(),file=$('groupImageFile').files[0]||groupRecordedAudio;
