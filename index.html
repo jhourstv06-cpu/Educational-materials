@@ -96,6 +96,7 @@ small{color:#617184}
 .chat-member{display:flex;align-items:center;gap:10px;width:100%;padding:11px 9px;text-align:left;background:#fff;color:#203348;border:1px solid #e6edf4;border-radius:11px}
 .chat-member:hover,.chat-member:focus{background:#eaf3fb;border-color:#b9d3e8}
 .chat-avatar{width:42px;height:42px;flex:0 0 42px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#dcecf8;color:#145b91;font-weight:850;font-size:1rem}
+.chat-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .chat-avatar-large{width:46px;height:46px;flex-basis:46px}
 .chat-member-info{min-width:0;display:flex;flex-direction:column;gap:2px}
 .chat-member-info strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -226,7 +227,7 @@ small{color:#617184}
 <section class="panel page-section hidden" data-page="educhat" id="educhat">
 <h2>💬 EDU CHAT</h2><p>Wasiliana na walimu, wanafunzi na marafiki wako kwa urahisi.</p>
 <div class="chat-shell">
- <aside class="chat-contacts"><div class="chat-contacts-head"><h3>👥 Wanachama</h3><button id="chatReloadBtn" type="button" class="secondary">↻</button></div><input id="chatSearch" placeholder="Tafuta mwanachama..."><div id="chatSearchResults" class="chat-member-list">Inapakia majina...</div><button id="openGroupChatBtn" type="button" class="chat-open-group">🌍 Ukumbi wa wote</button></aside>
+ <aside class="chat-contacts"><div class="chat-contacts-head"><h3>👥 Wanachama</h3><button id="chatReloadBtn" type="button" class="secondary">↻</button></div><button id="myChatPhotoBtn" type="button" class="secondary">📷 Weka picha yangu</button><input id="myChatPhotoFile" type="file" accept="image/jpeg,image/png,image/webp" hidden><input id="chatSearch" placeholder="Tafuta mwanachama..."><div id="chatSearchResults" class="chat-member-list">Inapakia majina...</div><button id="openGroupChatBtn" type="button" class="chat-open-group">🌍 Ukumbi wa wote</button></aside>
  <section class="chat-conversation" id="directChatPanel"><div class="chat-conversation-head"><button id="directChatBackBtn" type="button" class="chat-back-btn" aria-label="Rudi kwenye majina">← Rudi</button><div class="chat-avatar chat-avatar-large">👤</div><div><h3 id="directChatTitle">Mazungumzo</h3><small>Ujumbe binafsi</small></div></div><div id="directMessages" class="chat-message-area">Hakuna mazungumzo yaliyochaguliwa.</div><form id="directMessageForm" class="chat-compose chat-compose-media"><textarea id="directMessageText" rows="2" placeholder="Andika ujumbe wako..." aria-label="Ujumbe binafsi"></textarea><div class="chat-media-tools"><label class="chat-attach">📷 Picha<input id="directImageFile" type="file" accept="image/*" hidden></label><button type="button" id="directRecordBtn" class="secondary">🎙️ Rekodi sauti</button><span id="directMediaStatus" class="chat-media-status"></span><button type="submit" aria-label="Tuma ujumbe">➤ Tuma</button></div></form></section>
 </div>
 <section class="panel chat-group-panel" id="publicChatPanel"><div class="chat-group-heading"><button id="groupChatBackBtn" type="button" class="chat-back-btn">← Rudi kwenye majina</button><h3>🌍 Ukumbi wa wote</h3><button type="button" class="secondary" id="groupReloadBtn">↻ Onyesha ujumbe mpya</button></div><p>Ujumbe unaotumwa hapa unaweza kusomwa na wanachama wote walioingia.</p><div id="groupMessages" class="chat-message-area chat-group-messages">Inapakia ujumbe...</div><form id="groupMessageForm" class="chat-compose chat-compose-media"><textarea id="groupMessageText" rows="2" placeholder="Andika ujumbe kwa wanachama wote..." aria-label="Ujumbe kwa wote"></textarea><div class="chat-media-tools"><label class="chat-attach">📷 Picha<input id="groupImageFile" type="file" accept="image/*" hidden></label><button type="button" id="groupRecordBtn" class="secondary">🎙️ Rekodi sauti</button><span id="groupMediaStatus" class="chat-media-status"></span><button type="submit">➤ Tuma kwa wote</button></div></form></section>
@@ -656,6 +657,8 @@ async function loadChatMembers(){
  const {data,error}=await db.from('member_directory').select('id,full_name,role').neq('id',currentUser.id).order('full_name',{ascending:true}).limit(500);
  if(error){$('chatSearchResults').textContent='Imeshindikana kupata majina: '+error.message;return;}
  const people=data||[];
+ const avatarResult=await db.from('profile_avatar_directory').select('id,avatar_url').in('id',people.map(p=>p.id));
+ const avatarById={};(avatarResult.data||[]).forEach(p=>avatarById[p.id]=p.avatar_url);
  const presence=await db.from('member_presence').select('user_id,last_seen_at').in('user_id',people.map(p=>p.id));
  chatPresenceMap={};(presence.data||[]).forEach(p=>chatPresenceMap[p.user_id]=p.last_seen_at);
  const incoming=await db.from('direct_messages').select('sender_id,created_at').eq('receiver_id',currentUser.id).order('created_at',{ascending:false}).limit(500);
@@ -827,6 +830,23 @@ async function searchChatMembers(){await loadChatMembers();}
 async function sendFriendRequest(id){const {data:existing,error:readErr}=await db.from('friend_requests').select('id,status').or('and(sender_id.eq.'+currentUser.id+',receiver_id.eq.'+id+'),and(sender_id.eq.'+id+',receiver_id.eq.'+currentUser.id+')');if(readErr){chatStatus(readErr.message,true);return;}if(existing?.length){chatStatus('Ombi au urafiki tayari upo.');return;}const {error}=await db.from('friend_requests').insert({sender_id:currentUser.id,receiver_id:id,status:'pending'});if(error)chatStatus('Ombi halijatumwa: '+error.message,true);else{chatStatus('Ombi la urafiki limetumwa.');loadChatSocial();}}
 async function loadChatSocial(){if(!currentUser)return;const {data:requests,error}=await db.from('friend_requests').select('*').eq('receiver_id',currentUser.id).eq('status','pending');if(error){$('chatIncoming').textContent=error.message;return;}const ids=(requests||[]).map(x=>x.sender_id);let people={};if(ids.length){const {data}=await db.from('member_directory').select('id,full_name,role').in('id',ids);(data||[]).forEach(p=>people[p.id]=p);}$('chatIncoming').innerHTML=requests?.length?requests.map(r=>'<article class="item"><b>'+chatSafe(people[r.sender_id]?.full_name||'Mwanachama')+'</b><div class="row"><button data-friend-accept="'+r.id+'">Kubali</button><button class="secondary" data-friend-reject="'+r.id+'">Kataa</button></div></article>').join(''):'Hakuna maombi mapya.';document.querySelectorAll('[data-friend-accept]').forEach(b=>b.onclick=()=>respondFriend(b.dataset.friendAccept,'accepted'));document.querySelectorAll('[data-friend-reject]').forEach(b=>b.onclick=()=>respondFriend(b.dataset.friendReject,'rejected'));const {data:out}=await db.from('friend_requests').select('*').eq('sender_id',currentUser.id).eq('status','accepted');const incoming=await db.from('friend_requests').select('*').eq('receiver_id',currentUser.id).eq('status','accepted');const friendIds=[...(out||[]).map(x=>x.receiver_id),...(incoming.data||[]).map(x=>x.sender_id)];let friends=[];if(friendIds.length){const {data}=await db.from('member_directory').select('id,full_name,role').in('id',friendIds);friends=data||[];}$('chatFriends').innerHTML=friends.length?friends.map(p=>'<article class="item"><b>'+chatSafe(p.full_name||'Mwanachama')+'</b><small>'+(p.role==='admin'?'Mwalimu / Admin':'Mwanafunzi')+'</small><button type="button" data-chat-friend="'+p.id+'">Tuma ujumbe</button></article>').join(''):'Bado hujaongeza marafiki.';document.querySelectorAll('[data-chat-friend]').forEach(b=>b.onclick=()=>selectChatMember(b.dataset.chatFriend,friends));}
 async function respondFriend(id,status){const {error}=await db.from('friend_requests').update({status}).eq('id',id);if(error)chatStatus('Imeshindikana: '+error.message,true);else{chatStatus(status==='accepted'?'Ombi limekubaliwa.':'Ombi limekataliwa.');loadChatSocial();}}
+$('myChatPhotoBtn')?.addEventListener('click',()=>$('myChatPhotoFile')?.click());
+$('myChatPhotoFile')?.addEventListener('change',async e=>{
+ const file=e.target.files?.[0];if(!file)return;
+ if(!currentUser){chatStatus('Ingia kwanza.',true);return;}
+ if(!['image/jpeg','image/png','image/webp'].includes(file.type)){chatStatus('Chagua picha ya JPG, PNG au WEBP.',true);e.target.value='';return;}
+ if(file.size>5*1024*1024){chatStatus('Picha isiwe kubwa kuliko MB 5.',true);e.target.value='';return;}
+ const ext=file.type==='image/png'?'png':file.type==='image/webp'?'webp':'jpg';
+ const path=currentUser.id+'/'+crypto.randomUUID()+'.'+ext;
+ chatStatus('Inapakia picha...');
+ const upload=await db.storage.from('profile-photos').upload(path,file,{contentType:file.type,upsert:false});
+ if(upload.error){chatStatus('Picha haikupakiwa: '+upload.error.message,true);e.target.value='';return;}
+ const publicUrl=db.storage.from('profile-photos').getPublicUrl(path).data.publicUrl;
+ const update=await db.from('profiles').update({avatar_url:publicUrl}).eq('id',currentUser.id);
+ if(update.error){chatStatus('Picha imepakiwa lakini haikuunganishwa na akaunti: '+update.error.message,true);e.target.value='';return;}
+ chatStatus('Picha yako ya profaili imehifadhiwa.');
+ e.target.value='';await loadChatMembers();
+});
 $('chatReloadBtn')?.addEventListener('click',loadChatMembers);
 $('groupReloadBtn')?.addEventListener('click',loadGroupMessages);
 $('chatSearchBtn')?.addEventListener('click',searchChatMembers);
