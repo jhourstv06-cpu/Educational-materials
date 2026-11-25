@@ -812,7 +812,14 @@ async function pollChatNotifications(){
   const latest=found[found.length-1];
   const onChat=!$('educhat')?.classList.contains('hidden');
   if(onChat){
-   if((dm.data||[]).length&&selectedChatMember)await loadDirectMessages();
+   const incomingDms=dm.data||[];
+   if(incomingDms.length){
+    if(selectedChatMember&&incomingDms.some(m=>m.sender_id===selectedChatMember.id)){
+     await loadDirectMessages();
+     localStorage.setItem('eduChatRead_'+currentUser.id+'_'+selectedChatMember.id,new Date().toISOString());
+    }
+    await loadChatMembers();
+   }
    if((gm.data||[]).length)await loadGroupMessages();
    clearChatUnread();return;
   }
