@@ -670,6 +670,11 @@ async function selectChatMember(id,people){
  selectedChatMember=people.find(p=>p.id===id);if(!selectedChatMember)return;
  $('educhat').classList.remove('group-chat-open');document.querySelector('#educhat .chat-shell')?.classList.add('chat-conversation-open');
  $('directChatTitle').textContent='Mazungumzo na '+(selectedChatMember.full_name||'Mwanachama')+' · '+(isChatOnline({last_seen_at:chatPresenceMap[selectedChatMember.id]})?'Online':'Offline');
+ const avatarHead=document.querySelector('#directChatPanel .chat-avatar-large');
+ if(avatarHead){
+  const {data:avatarData}=await db.from('profile_avatar_directory').select('avatar_url').eq('id',selectedChatMember.id).maybeSingle();
+  avatarHead.innerHTML=avatarData?.avatar_url?'<img src="'+chatSafe(avatarData.avatar_url)+'" alt="Picha ya profaili">':'👤';
+ }
  await loadDirectMessages();localStorage.setItem('eduChatRead_'+currentUser.id+'_'+id,new Date().toISOString());await loadChatMembers();
  $('directChatPanel').scrollIntoView({behavior:'smooth',block:'start'});
 }
